@@ -1,0 +1,526 @@
+🔥 MASTER PROMPT — “UNICON FINTECH WEBSITE REBUILD”
+
+🎯 CONTEXT
+
+You are a world-class product designer + frontend architect hired to redesign a crypto MiCA-regulated fintech platform website.
+
+The current website:
+👉 https://krypto-knight.com/
+
+Your mission is to rebuild it into a $1B+ fintech unicorn-level website, comparable in quality to:
+
+ Revolut
+
+ Robinhood
+
+ Stripe
+
+ Coinbase Institutional
+
+The output must feel:
+
+ Institutional-grade (trust, compliance, security)
+
+ Minimal and premium (clean, modern, whitespace-driven)
+
+ High-conversion (clear CTA, structured flows)
+
+ Tech-forward (AI, crypto-native, future finance)
+
+🧠 DESIGN PRINCIPLES (MANDATORY)
+
+Follow these fintech UX principles strictly:
+
+1. Radical Simplicity
+
+ One core message per section
+
+ No clutter, no long paragraphs
+
+ Clear hierarchy and spacing
+
+ “One number / one idea per screen” approach
+
+👉 Fintech leaders prioritize intuitive, frictionless UX to improve retention
+
+2. Trust-First Design (CRITICAL FOR MiCA)
+
+ Emphasize:
+
+ Regulation (MiCA compliance)
+
+ Security (custody, AML/KYC)
+
+ Transparency
+
+ Use:
+
+ Clean typography
+
+ Subtle animations
+
+ Professional tone (NOT hype crypto)
+
+👉 Poor UX in fintech destroys trust and user confidence
+
+3. Institutional + Modern Aesthetic
+
+Blend:
+
+Institutional finance (BlackRock, Fidelity)
+
+Modern fintech (Revolut, Stripe)
+
+Style guidelines:
+
+ Dark mode or light + premium gradients
+
+ Sharp typography (Inter / SF Pro / Satoshi)
+
+ Glassmorphism / subtle depth
+
+ Micro-interactions
+
+4. Data Visualization > Text
+
+ Replace text with:
+
+ Dashboards
+
+ Charts
+
+ Metrics
+
+ Visual flows
+
+👉 Users trust platforms more when data is visualized clearly
+
+5. AI + Personalization Layer
+
+Position the platform as:
+
+“AI-powered crypto financial infrastructure”
+
+Include:
+
+ Smart insights
+
+ Automated reporting
+
+ Predictive analytics
+
+👉 AI-driven personalization is now expected in fintech products
+
+6. Emotion + Premium Feel
+
+ Minimal text, strong visuals
+
+ Smooth animations
+
+ Confident, calm tone
+
+👉 Modern fintech uses emotional UX, not cold banking UI
+
+🏗️ WEBSITE STRUCTURE (REBUILD COMPLETELY)
+
+1. HERO SECTION (ABOVE THE FOLD)
+
+Create a powerful, investor-grade first impression
+
+Include:
+
+Headline (example style):
+
+“Institutional Crypto Infrastructure for the Next Financial Era”
+
+ Subheadline:
+Clear, sharp, no buzzwords
+
+ CTA:
+
+ “Get Started”
+
+ “Request Access”
+
+ Visual:
+
+ Live dashboard mock
+
+ Trading / portfolio UI
+
+ Data visualization
+
+2. TRUST & REGULATION STRIP
+
+Immediately below hero:
+
+ “MiCA Compliant”
+
+ “Institutional-grade custody”
+
+ “AML / KYC ready”
+
+ Security badges / minimal icons
+
+Goal: reduce perceived risk instantly
+
+3. PRODUCT SECTION (CORE OFFERING)
+
+Break into 3–5 modules:
+
+Example:
+
+ Crypto Payments Infrastructure
+
+ Treasury Management
+
+ Institutional Trading
+
+ Compliance & Reporting
+
+ APIs / Developer Tools
+
+Each block:
+
+ Short headline
+
+ 1-line explanation
+
+ Visual UI mock
+
+4. DASHBOARD / PLATFORM SHOWCASE
+
+Full-width section:
+
+ Show:
+
+ Portfolio overview
+
+ Analytics
+
+ Risk metrics
+
+ Transactions
+
+Make it feel like:
+
+👉 “This is a real platform, not just a website”
+
+5. WHY US (DIFFERENTIATION)
+
+Positioning:
+
+ Not just another crypto company
+
+ A regulated financial infrastructure provider
+
+Include:
+
+ Institutional focus
+
+ Regulatory-first approach
+
+ Scalable architecture
+
+ AI-driven finance
+
+6. USE CASES
+
+Segment:
+
+ Enterprises
+
+ Crypto companies
+
+ Funds / asset managers
+
+ Fintech startups
+
+Each:
+
+ Problem → solution framing
+
+7. SOCIAL PROOF / AUTHORITY
+
+Include:
+
+ Partners / integrations
+
+ Licenses / jurisdictions
+
+ Media mentions (if any)
+
+8. FINAL CTA
+
+Strong conversion:
+
+ “Build on regulated crypto infrastructure”
+
+ “Start with Krypto Knight”
+
+🎨 DESIGN SYSTEM
+
+Colors
+
+ Base: Black / White
+
+ Accent: Electric green / blue / gradient
+
+ Avoid loud “retail crypto” colors
+
+Typography
+
+ Headings: Bold, large, tight
+
+ Body: Minimal, clean
+
+UI Style
+
+ Rounded corners (subtle)
+
+ Soft shadows
+
+ Glass panels
+
+ Smooth hover states
+
+⚙️ TECH IMPLEMENTATION
+
+Build using:
+
+ Next.js / React
+
+ Tailwind CSS
+
+ Framer Motion (animations)
+
+Requirements:
+
+ Lightning fast (Lighthouse 90+)
+
+ Fully responsive
+
+ SEO optimized
+
+ Modular components
+
+🚫 WHAT TO AVOID
+
+ Generic crypto buzzwords
+
+ Overcomplicated UI
+
+ Long paragraphs
+
+ “Retail crypto scammy look”
+
+ Too many colors
+
+ Clutter
+
+🧠 FINAL GOAL
+
+The website should feel like:
+
+“If Stripe, Revolut, and Coinbase built a MiCA-regulated crypto infrastructure company.”
+
+Users should immediately think:
+
+ This is serious
+
+ This is regulated
+
+ This is scalable
+
+ This is trustworthy
+
+ This is premium
+
+OUTPUT FORMAT
+
+ Full redesigned sitemap
+
+ Wireframe structure
+
+ UI component breakdown
+
+ Final production-ready frontend code
+
+below is the content of the current site, you may use it or upgrade the content to make it better and more institutional
+
+Skip to main contentSkip to footer
+
+KRYPTO KNIGHT
+
+AboutServicesContact
+
+Login
+
+Get Started
+
+Powering Up a Crypto Trading World
+
+KRYPTO KNIGHT Digital Asset Services offer ready-to-use crypto transaction facilities, helping Businesses and Individuals enter the new era of finance. We provide Simple and Secure Digital Asset Transactions.
+
+Start Here, Tap into the Future of Money
+
+Personal Account
+
+Bussiness Account
+
+Krypto Knight
+
+Built on Trusted Platforms and Secure Wallets
+
+By leveraging industry-leading technologies we provide a secure and seamless access to digital assets trading.
+
+Transact with Confidence
+
+Experience efficient and reliable crypto-to-fiat transactions tailored for businesses and individual investors.
+
+Competitive Pricing
+
+Enjoy competitive rates, low fees, and transparency while performing your transactions effortlessly.
+
+Supporting the Most Popular Cryptocurencies
+
+The most desired cryptocurrencies, including Bitcoin and Ethereum and every-day fiat currencies, such as USD and EUR, are available for exchange.
+
+Dedicated Support
+
+Our dedicated team is available to help you navigate the crypto landscape and answer any questions during the journey.
+
+Online Account Opening
+
+Easy online application forms and personalised customer support.
+
+Expanding Financial Strategies
+
+for Modern Investors
+
+
+
+We offer our services to various types of elidgible clinets and have proven
+
+experience to effectively cater services to any scale.
+
+
+
+Legal, secure and client focused
+
+
+
+At KRYPTO KNIGHT, we prioritize client trust and satisfaction by integrating compliance, operational efficiency,
+
+top-tier security, and a client-focused approach into every aspect of our services.
+
+
+
+
+
+Frequent financial and regulatory audits: ensure we maintain the highest standards of integrity and operational
+
+resilience.
+
+
+
+
+
+Registered with the Cyprus Securities and Exchange Commission (CySEC) as a Crypto Asset Service Provider:
+
+adhering to stringent procedures with our own compliance and AML department.
+
+
+
+
+
+Focus on Assets Security: continuously updated to comply with evolving legal requirements, ensuring your
+
+investments are safeguarded.
+
+
+
+Experience Simplified Access to Crypto, Without Blockchain Complexity
+
+
+
+Streamlined Account Setup: Get started quickly with our streamlined account opening process
+
+
+
+
+
+Security and Speed: Experience fast account activation combined with advanced security features, ensuring a
+
+safe and efficient trading experience.
+
+
+
+
+
+Seamless Experience: Tirelessly working to provide a hassle-free and enjoyable journey while trading your
+
+favourite crypto assets.
+
+
+
+Looking
+
+
+
+for
+
+
+
+a
+
+
+
+Seamless
+
+
+
+Way
+
+to
+
+
+
+Trade
+
+Cryptocurrencies?
+
+Start now
+
+Easily Exchange Digital Currencies with Our Multi-Currency Support Linked to Your Krypto Knight Account.
+
+Contact
+
+
+
+Us.
+
+
+
+We are here to assist you during our business hours. Please feel free to
+
+contact us for any questions or issues you may have.
+
+
+
+Krypto Knight
+
+Privacy PolicyTerms & ConditionsAML PolicyComplaints Procedure© 2024 KRYPTO KNIGHT LTD
+
+KRYPTO KNIGHT LTD is registered with the Cyprus Securities and Exchange Commission as a Crypto Asset Service Porvider.
+Company Registration Number: HE 434989
+CASP Registration: 015/24
+Disclaimer: The information on this website is strictly general in nature. Please consider the information in relation to your objectives, financial situation and needs. Please contact the Company for further details in case you have any questions.
+Risk Warning: Cryptocurrencies come with a great risk of losing money rapidly due to high volatility. You should consider whether you understand how to trade Cryptocurrencies and whether you can afford to take the high risk of losing your money.
+
+We value your privacy
+
+We use cookies to enhance your experience.
+
+ManageAllow
+
