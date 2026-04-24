@@ -5,4 +5,4 @@ nixPkgs = ["nodejs_22", "pnpm-9_x"]
 cmds = ["pnpm install --no-frozen-lockfile"]
 
 [phases.build]
-cmds = ["pnpm -r --filter './artifacts/krypto-knight' run build"]
+cmds = ["PORT=3000 BASE_PATH=/ pnpm -r --filter './artifacts/krypto-knight' run build"]
