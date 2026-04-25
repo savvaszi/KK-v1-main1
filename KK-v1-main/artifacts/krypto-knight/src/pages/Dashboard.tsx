@@ -423,58 +423,270 @@ function NotificationsTab({ user }: { user: any }) {
   );
 }
 
-// ─── Wallet ───────────────────────────────────────────────────────────────────
-function WalletTab({ wallets, onRefresh }: { wallets: any[]; onRefresh: () => void }) {
-  const api = useApi();
+// ─── Wallet (Fireblocks) ──────────────────────────────────────────────────────
+const POPULAR_ASSETS = ["BTC", "ETH", "USDC", "USDT", "SOL", "MATIC"];
 
-  const disconnect = async (id: string) => {
-    await api(`/me/wallets/${id}`, { method: "DELETE" });
-    onRefresh();
+function WalletTab(_props: { wallets: any[]; onRefresh: () => void }) {
+  const api = useApi();
+  const [subtab, setSubtab] = useState<"assets" | "receive" | "send" | "history">("assets");
+  const [vault, setVault] = useState<any>(null);
+  const [txs, setTxs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedAsset, setSelectedAsset] = useState<string>("ETH");
+  const [addresses, setAddresses] = useState<any[]>([]);
+  const [addrLoading, setAddrLoading] = useState(false);
+  const [sendForm, setSendForm] = useState({ assetId: "ETH", amount: "", destinationAddress: "", note: "" });
+  const [sending, setSending] = useState(false);
+  const [sendMsg, setSendMsg] = useState("");
+  const [copied, setCopied] = useState("");
+  const [activating, setActivating] = useState("");
+  const [fbUnavailable, setFbUnavailable] = useState(false);
+
+  const loadVault = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await api("/me/fireblocks/vault");
+      if (data) setVault(data);
+      else setFbUnavailable(true);
+    } catch { setFbUnavailable(true); }
+    setLoading(false);
+  }, [api]);
+
+  const loadTxs = useCallback(async () => {
+    try {
+      const data = await api("/me/fireblocks/transactions?limit=25");
+      if (data) setTxs(Array.isArray(data) ? data : []);
+    } catch { /* ignore */ }
+  }, [api]);
+
+  useEffect(() => { loadVault(); loadTxs(); }, []);
+
+  useEffect(() => {
+    if (subtab !== "receive" || !selectedAsset) return;
+    setAddrLoading(true);
+    api(`/me/fireblocks/vault/assets/${selectedAsset}/addresses`)
+      .then(d => { if (d) setAddresses(Array.isArray(d.addresses) ? d.addresses : Array.isArray(d) ? d : []); })
+      .catch(() => {})
+      .finally(() => setAddrLoading(false));
+  }, [subtab, selectedAsset]);
+
+  const activateAsset = async (assetId: string) => {
+    setActivating(assetId);
+    try { await api(`/me/fireblocks/vault/assets/${assetId}`, { method: "POST" }); await loadVault(); }
+    catch { /* already active or error */ }
+    setActivating("");
   };
+
+  const send = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSending(true); setSendMsg("");
+    try {
+      await api("/me/fireblocks/transactions", { method: "POST", body: JSON.stringify(sendForm) });
+      setSendMsg("Transaction submitted successfully.");
+      setSendForm(f => ({ ...f, amount: "", destinationAddress: "", note: "" }));
+      await loadTxs();
+    } catch (err: any) { setSendMsg(err.message); }
+    setSending(false);
+  };
+
+  const copy = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopied(id); setTimeout(() => setCopied(""), 2000);
+  };
+
+  const txColor = (s: string) => ({ COMPLETED: "text-primary", FAILED: "text-red-400", CANCELLED: "text-red-400", CONFIRMING: "text-blue-400", PENDING_SIGNATURE: "text-amber-400" }[s] ?? "text-muted-foreground");
+
+  const vaultAssets: any[] = vault?.assets ?? [];
+
+  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+
+  if (fbUnavailable) return (
+    <div className="space-y-6">
+      <div><h2 className="text-2xl font-bold text-white mb-1">Crypto Wallet</h2></div>
+      <div className="glass border border-white/10 rounded-xl p-8 text-center">
+        <Wallet className="w-10 h-10 text-muted-foreground/40 mx-auto mb-4" />
+        <p className="text-white font-semibold mb-2">Custody not available</p>
+        <p className="text-sm text-muted-foreground">The custody service is not configured yet. Please contact support.</p>
+      </div>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-white mb-1">External Wallet Connection</h2>
-        <p className="text-muted-foreground text-sm">Connect your Web3 wallet for blockchain transactions.</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-white mb-1">Crypto Wallet</h2>
+          <p className="text-muted-foreground text-sm">MPC-secured custody via Fireblocks · Vault {vault?.id}</p>
+        </div>
+        <div className="flex items-center gap-2 text-xs px-3 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary font-semibold">
+          <Shield className="w-3.5 h-3.5" /> MPC Secured
+        </div>
       </div>
 
-      {wallets.length === 0 ? (
-        <div className="glass border border-white/10 rounded-xl p-8 text-center">
-          <Wallet className="w-12 h-12 text-primary/50 mx-auto mb-4" />
-          <h3 className="font-semibold text-white mb-2">Connect Your Crypto Wallet</h3>
-          <p className="text-sm text-muted-foreground mb-6">Link your wallet to access blockchain features, manage digital assets, and enable secure transactions.</p>
-          <div className="flex flex-wrap gap-2 justify-center mb-6">
-            {["Secure", "Fast", "Multi-chain"].map(tag => (
-              <span key={tag} className="text-xs px-3 py-1 rounded-full border border-white/10 text-muted-foreground">{tag}</span>
-            ))}
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {["MetaMask", "WalletConnect", "Coinbase", "Trust Wallet"].map(w => (
-              <button key={w} className="py-2.5 px-3 rounded-lg border border-white/10 text-sm text-muted-foreground hover:border-primary/40 hover:text-white transition-colors">
-                {w}
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="glass border border-white/10 rounded-xl p-5">
-          {wallets.map((w: any) => (
-            <div key={w.id} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
-              <div>
-                <p className="text-sm font-mono text-white">{w.address.slice(0, 6)}…{w.address.slice(-4)}</p>
-                <p className="text-xs text-muted-foreground">{w.walletType} · {w.network}</p>
-              </div>
-              <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300 hover:bg-red-500/10" onClick={() => disconnect(w.id)}>Disconnect</Button>
+      {/* Sub-tabs */}
+      <div className="flex gap-1 border-b border-white/10">
+        {(["assets", "receive", "send", "history"] as const).map(t => (
+          <button key={t} onClick={() => setSubtab(t)}
+            className={`px-4 py-2.5 text-sm font-semibold capitalize transition-colors border-b-2 -mb-px ${subtab === t ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-white"}`}>
+            {t === "assets" ? "Assets" : t === "receive" ? "Receive" : t === "send" ? "Send" : "History"}
+          </button>
+        ))}
+      </div>
+
+      {/* Assets */}
+      {subtab === "assets" && (
+        <div className="space-y-4">
+          {vaultAssets.length > 0 && (
+            <div className="glass border border-white/10 rounded-xl overflow-hidden">
+              <div className="px-5 py-3 border-b border-white/5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Your Assets</div>
+              {vaultAssets.map((a: any) => (
+                <div key={a.id} className="flex items-center justify-between px-5 py-3.5 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-xs font-bold text-primary">{(a.id || "?").slice(0, 3)}</div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">{a.id}</p>
+                      <p className="text-xs text-muted-foreground">{a.blockchainDescriptor || ""}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-white">{parseFloat(a.total || "0").toFixed(8)}</p>
+                    <p className="text-xs text-muted-foreground">Available: {parseFloat(a.available || "0").toFixed(8)}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
+
+          <div className="glass border border-white/10 rounded-xl p-5">
+            <p className="text-sm font-semibold text-white mb-3">Activate an Asset</p>
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+              {POPULAR_ASSETS.map(a => {
+                const active = vaultAssets.some((v: any) => v.id === a);
+                return (
+                  <button key={a} disabled={active || activating === a} onClick={() => activateAsset(a)}
+                    className={`py-2 rounded-lg text-xs font-semibold transition-colors ${active ? "bg-primary/10 border border-primary/30 text-primary cursor-default" : "border border-white/10 text-muted-foreground hover:border-primary/40 hover:text-white"}`}>
+                    {activating === a ? "…" : a}{active ? " ✓" : ""}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
 
-      <div className="glass border border-white/10 rounded-xl p-5 flex gap-3">
-        <Shield className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-        <p className="text-sm text-muted-foreground">Your wallet connection is secure and encrypted. We never store your private keys. Only sign transactions that you initiate and trust.</p>
-      </div>
+      {/* Receive */}
+      {subtab === "receive" && (
+        <div className="space-y-4">
+          <div className="glass border border-white/10 rounded-xl p-5">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 block">Select Asset</Label>
+            <div className="flex gap-2 flex-wrap mb-4">
+              {(vaultAssets.length > 0 ? vaultAssets.map((a: any) => a.id) : POPULAR_ASSETS).map((a: string) => (
+                <button key={a} onClick={() => setSelectedAsset(a)}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${selectedAsset === a ? "bg-primary/20 border border-primary/40 text-primary" : "border border-white/10 text-muted-foreground hover:border-primary/30 hover:text-white"}`}>
+                  {a}
+                </button>
+              ))}
+            </div>
+
+            {addrLoading ? <div className="text-sm text-muted-foreground">Loading addresses…</div> : addresses.length === 0 ? (
+              <div className="text-sm text-muted-foreground">
+                No deposit address yet.{" "}
+                <button onClick={async () => { setAddrLoading(true); await api(`/me/fireblocks/vault/assets/${selectedAsset}/addresses`, { method: "POST" }); const d = await api(`/me/fireblocks/vault/assets/${selectedAsset}/addresses`); if (d) setAddresses(Array.isArray(d.addresses) ? d.addresses : Array.isArray(d) ? d : []); setAddrLoading(false); }} className="text-primary underline">Generate one</button>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {addresses.map((addr: any, i: number) => (
+                  <div key={i} className="flex items-center justify-between gap-3 p-3 rounded-lg bg-black/30 border border-white/10">
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-0.5">{addr.description || `Address ${i + 1}`}</p>
+                      <p className="text-sm font-mono text-white break-all">{addr.address}</p>
+                      {addr.tag && <p className="text-xs text-muted-foreground mt-0.5">Tag: {addr.tag}</p>}
+                    </div>
+                    <Button size="sm" variant="ghost" className="shrink-0 text-muted-foreground hover:text-primary" onClick={() => copy(addr.address, addr.address)}>
+                      <Copy className="w-4 h-4" />{copied === addr.address ? " Copied!" : ""}
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+          <Alert className="border-amber-500/20 bg-amber-500/10">
+            <AlertDescription className="text-amber-400 text-xs">Only send {selectedAsset} to this address. Sending other assets may result in permanent loss.</AlertDescription>
+          </Alert>
+        </div>
+      )}
+
+      {/* Send */}
+      {subtab === "send" && (
+        <div className="glass border border-white/10 rounded-xl p-6 max-w-lg">
+          <h3 className="font-semibold text-white mb-4">Send Crypto</h3>
+          {sendMsg && (
+            <Alert className={`mb-4 ${sendMsg.includes("success") ? "border-primary/30 bg-primary/10" : "border-red-500/30 bg-red-500/10"}`}>
+              <AlertDescription className={sendMsg.includes("success") ? "text-primary" : "text-red-400"}>{sendMsg}</AlertDescription>
+            </Alert>
+          )}
+          <form onSubmit={send} className="space-y-4">
+            <div className="space-y-2">
+              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Asset</Label>
+              <select value={sendForm.assetId} onChange={e => setSendForm(f => ({ ...f, assetId: e.target.value }))}
+                className="w-full bg-black/30 border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-primary">
+                {(vaultAssets.length > 0 ? vaultAssets.map((a: any) => a.id) : POPULAR_ASSETS).map((a: string) => (
+                  <option key={a} value={a}>{a}</option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Destination Address</Label>
+              <Input value={sendForm.destinationAddress} onChange={e => setSendForm(f => ({ ...f, destinationAddress: e.target.value }))} placeholder="0x…" className="bg-black/30 border-white/10 text-white focus:border-primary font-mono text-sm" required />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Amount</Label>
+              <Input type="number" step="any" value={sendForm.amount} onChange={e => setSendForm(f => ({ ...f, amount: e.target.value }))} placeholder="0.00" className="bg-black/30 border-white/10 text-white focus:border-primary" required />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Note (optional)</Label>
+              <Input value={sendForm.note} onChange={e => setSendForm(f => ({ ...f, note: e.target.value }))} placeholder="Purpose of transaction" className="bg-black/30 border-white/10 text-white focus:border-primary" />
+            </div>
+            <Alert className="border-red-500/20 bg-red-500/10">
+              <AlertDescription className="text-red-400 text-xs">Transactions are subject to approval policy. Always double-check the destination address.</AlertDescription>
+            </Alert>
+            <Button type="submit" disabled={sending} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold">
+              {sending ? "Submitting…" : "Send Transaction"}
+            </Button>
+          </form>
+        </div>
+      )}
+
+      {/* History */}
+      {subtab === "history" && (
+        <div className="glass border border-white/10 rounded-xl overflow-hidden">
+          <div className="px-5 py-3 border-b border-white/5 text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center justify-between">
+            <span>Transaction History</span>
+            <button onClick={loadTxs} className="hover:text-primary transition-colors">↻ Refresh</button>
+          </div>
+          {txs.length === 0 ? (
+            <div className="p-8 text-center text-sm text-muted-foreground">No transactions yet.</div>
+          ) : (
+            txs.map((tx: any) => (
+              <div key={tx.id} className="flex items-center justify-between px-5 py-3.5 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${tx.status === "COMPLETED" ? "bg-primary/10" : "bg-white/5"}`}>
+                    <Key className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-white">{tx.assetId} · {tx.amount}</p>
+                    <p className="text-xs text-muted-foreground font-mono">{(tx.id || "").slice(0, 16)}…</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className={`text-xs font-semibold ${txColor(tx.status)}`}>{tx.status}</p>
+                  <p className="text-xs text-muted-foreground">{tx.createdAt ? timeAgo(tx.createdAt) : ""}</p>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }
