@@ -1,9 +1,13 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth";
 
 const Navbar = () => {
+  const { user } = useAuth();
+  const [, navigate] = useLocation();
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 glass border-b border-white/5 py-4">
       <div className="container mx-auto px-6 lg:px-12 flex items-center justify-between">
@@ -16,7 +20,7 @@ const Navbar = () => {
             KRYPTO KNIGHT
           </span>
         </Link>
-        
+
         <nav className="hidden md:flex items-center gap-8">
           <Link href="#services" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors" data-testid="link-services">Services</Link>
           <Link href="#platform" className="text-sm font-medium text-muted-foreground hover:text-white transition-colors" data-testid="link-platform">Platform</Link>
@@ -25,11 +29,17 @@ const Navbar = () => {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Button variant="ghost" className="hidden sm:inline-flex text-white hover:text-primary hover:bg-primary/10" data-testid="btn-login">
-            Client Login
-          </Button>
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(0,255,156,0.3)] hover:shadow-[0_0_30px_rgba(0,255,156,0.5)] transition-all font-semibold" data-testid="btn-get-started">
-            Get Started
+          {user ? (
+            <Button onClick={() => navigate("/dashboard")} variant="ghost" className="hidden sm:inline-flex text-white hover:text-primary hover:bg-primary/10" data-testid="btn-login">
+              My Dashboard
+            </Button>
+          ) : (
+            <Button onClick={() => navigate("/login")} variant="ghost" className="hidden sm:inline-flex text-white hover:text-primary hover:bg-primary/10" data-testid="btn-login">
+              Client Login
+            </Button>
+          )}
+          <Button onClick={() => navigate(user ? "/dashboard" : "/register")} className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(0,255,156,0.3)] hover:shadow-[0_0_30px_rgba(0,255,156,0.5)] transition-all font-semibold" data-testid="btn-get-started">
+            {user ? "Dashboard" : "Get Started"}
           </Button>
         </div>
       </div>
