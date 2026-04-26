@@ -2,7 +2,10 @@
 nixPkgs = ["nodejs_22", "pnpm-9_x"]
 
 [phases.install]
-cmds = ["pnpm install --no-frozen-lockfile"]
+cmds = ["pnpm install --no-frozen-lockfile", "npm install -g serve"]
 
 [phases.build]
 cmds = ["PORT=3000 BASE_PATH=/ pnpm -r --filter './artifacts/krypto-knight' run build"]
+
+[start]
+cmd = "serve -s artifacts/krypto-knight/dist/public -p ${PORT:-3000}"
