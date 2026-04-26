@@ -8,7 +8,8 @@ import { Switch } from "@/components/ui/switch";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   LayoutDashboard, User, Shield, Bell, Wallet, LogOut,
-  Key, Clock, CheckCircle2, XCircle, AlertTriangle, Copy, Plus, Trash2
+  Key, Clock, CheckCircle2, XCircle, AlertTriangle, Copy, Plus, Trash2,
+  Layers, TrendingUp, Image
 } from "lucide-react";
 
 const API = "https://api.krypto-knight.com";
@@ -691,6 +692,243 @@ function WalletTab(_props: { wallets: any[]; onRefresh: () => void }) {
   );
 }
 
+// ─── Staking Tab ─────────────────────────────────────────────────────────────
+function StakingTab() {
+  const api = useApi();
+  const [providers, setProviders] = useState<any[]>([]);
+  const [positions, setPositions] = useState<any[]>([]);
+  const [chains, setChains] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [stakeForm, setStakeForm] = useState({ chainDescriptor: "ETH", providerId: "", stakedAmount: "" });
+  const [stakeMsg, setStakeMsg] = useState("");
+  const [staking, setStaking] = useState(false);
+
+  useEffect(() => {
+    Promise.allSettled([
+      api("/me/fireblocks/staking/providers").then(d => setProviders(Array.isArray(d) ? d : [])),
+      api("/me/fireblocks/staking/chains").then(d => setChains(Array.isArray(d) ? d : [])),
+      api("/me/fireblocks/staking/positions").then(d => {
+        const arr = Array.isArray(d) ? d : (d?.positions ?? []);
+        setPositions(arr);
+      }),
+    ]).finally(() => setLoading(false));
+  }, []);
+
+  const stake = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!stakeForm.providerId || !stakeForm.stakedAmount) { setStakeMsg("Fill all fields."); return; }
+    setStaking(true); setStakeMsg("");
+    try {
+      await api("/me/fireblocks/staking/stake", { method: "POST", body: JSON.stringify(stakeForm) });
+      setStakeMsg("Staking initiated successfully!");
+      const d = await api("/me/fireblocks/staking/positions");
+      setPositions(Array.isArray(d) ? d : (d?.positions ?? []));
+    } catch (err: any) { setStakeMsg(err.message); }
+    setStaking(false);
+  };
+
+  const action = async (posId: string, act: "unstake" | "withdraw" | "claim") => {
+    try {
+      await api(`/me/fireblocks/staking/positions/${posId}/${act}`, { method: "POST" });
+      const d = await api("/me/fireblocks/staking/positions");
+      setPositions(Array.isArray(d) ? d : (d?.positions ?? []));
+    } catch (err: any) { alert(err.message); }
+  };
+
+  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-white mb-1">Staking</h2>
+        <p className="text-muted-foreground text-sm">Earn rewards by staking your assets via Fireblocks</p>
+      </div>
+
+      {/* Positions */}
+      <div className="glass border border-white/10 rounded-xl overflow-hidden">
+        <div className="px-5 py-3 border-b border-white/5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">My Staking Positions ({positions.length})</div>
+        {positions.length === 0 ? (
+          <div className="p-8 text-center text-sm text-muted-foreground">No active staking positions.</div>
+        ) : positions.map((p: any) => (
+          <div key={p.id} className="flex items-center justify-between px-5 py-4 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
+            <div>
+              <p className="text-sm font-semibold text-white">{p.asset || p.assetId || "—"} · {p.amount || "—"}</p>
+              <p className="text-xs text-muted-foreground">Provider: {p.providerId || "—"} · Chain: {p.chainDescriptor || "—"}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`text-xs font-semibold px-2 py-1 rounded-full ${p.status === "ACTIVE" ? "bg-primary/10 text-primary border border-primary/20" : "bg-white/5 text-muted-foreground"}`}>{p.status || "—"}</span>
+              {p.status === "ACTIVE" && <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => action(p.id, "unstake")}>Unstake</Button>}
+              {p.status === "UNSTAKING" && <Button size="sm" variant="outline" className="text-xs h-7" onClick={() => action(p.id, "withdraw")}>Withdraw</Button>}
+              {p.rewards && <Button size="sm" variant="outline" className="text-xs h-7 text-primary border-primary/30" onClick={() => action(p.id, "claim")}>Claim Rewards</Button>}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* New Stake Form */}
+      <div className="glass border border-white/10 rounded-xl p-6 max-w-lg">
+        <h3 className="font-semibold text-white mb-4">Stake Assets</h3>
+        {stakeMsg && (
+          <Alert className={`mb-4 ${stakeMsg.includes("success") ? "border-primary/30 bg-primary/10" : "border-red-500/30 bg-red-500/10"}`}>
+            <AlertDescription className={stakeMsg.includes("success") ? "text-primary" : "text-red-400"}>{stakeMsg}</AlertDescription>
+          </Alert>
+        )}
+        <form onSubmit={stake} className="space-y-4">
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Chain</Label>
+            <select value={stakeForm.chainDescriptor} onChange={e => setStakeForm(f => ({ ...f, chainDescriptor: e.target.value }))}
+              className="w-full bg-black/30 border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-primary">
+              {chains.length > 0 ? chains.map((c: any) => <option key={c.id || c} value={c.id || c}>{c.name || c.id || c}</option>)
+                : ["ETH", "SOL", "MATIC"].map(c => <option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Provider</Label>
+            <select value={stakeForm.providerId} onChange={e => setStakeForm(f => ({ ...f, providerId: e.target.value }))}
+              className="w-full bg-black/30 border border-white/10 rounded-md px-3 py-2 text-sm text-white focus:outline-none focus:border-primary">
+              <option value="">Select provider…</option>
+              {providers.map((p: any) => <option key={p.id} value={p.id}>{p.name || p.id}</option>)}
+            </select>
+          </div>
+          <div className="space-y-2">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Amount</Label>
+            <Input type="number" step="any" value={stakeForm.stakedAmount} onChange={e => setStakeForm(f => ({ ...f, stakedAmount: e.target.value }))} placeholder="0.00" className="bg-black/30 border-white/10 text-white focus:border-primary" required />
+          </div>
+          <Button type="submit" disabled={staking} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold">
+            {staking ? "Submitting…" : "Stake Now"}
+          </Button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ─── Earn / Yield Tab ─────────────────────────────────────────────────────────
+function EarnTab() {
+  const api = useApi();
+  const [opportunities, setOpportunities] = useState<any[]>([]);
+  const [positions, setPositions] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [actionMsg, setActionMsg] = useState("");
+
+  useEffect(() => {
+    Promise.allSettled([
+      api("/me/fireblocks/earn/opportunities").then(d => setOpportunities(Array.isArray(d) ? d : [])),
+      api("/me/fireblocks/earn/positions").then(d => setPositions(Array.isArray(d) ? d : [])),
+    ]).finally(() => setLoading(false));
+  }, []);
+
+  const enterPosition = async (opportunityId: string) => {
+    setActionMsg("");
+    try {
+      await api("/me/fireblocks/earn/actions", { method: "POST", body: JSON.stringify({ opportunityId, type: "ENTER_POSITION" }) });
+      setActionMsg("Position entered! Refresh to see your positions.");
+    } catch (err: any) { setActionMsg(err.message); }
+  };
+
+  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-white mb-1">Earn / Yield</h2>
+        <p className="text-muted-foreground text-sm">Automated yield opportunities via Fireblocks Earn</p>
+      </div>
+      {actionMsg && (
+        <Alert className="border-primary/30 bg-primary/10">
+          <AlertDescription className="text-primary text-sm">{actionMsg}</AlertDescription>
+        </Alert>
+      )}
+      {/* Active Positions */}
+      {positions.length > 0 && (
+        <div className="glass border border-white/10 rounded-xl overflow-hidden">
+          <div className="px-5 py-3 border-b border-white/5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Active Earn Positions</div>
+          {positions.map((p: any, i: number) => (
+            <div key={p.id || i} className="flex items-center justify-between px-5 py-4 border-b border-white/5 last:border-0">
+              <div>
+                <p className="text-sm font-semibold text-white">{p.asset || p.assetId || "—"}</p>
+                <p className="text-xs text-muted-foreground">Provider: {p.providerId || "—"} · APY: {p.apy != null ? `${(p.apy * 100).toFixed(2)}%` : "—"}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-bold text-white">{p.amount || "—"}</p>
+                <span className="text-xs text-primary">{p.status || "ACTIVE"}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      {/* Opportunities */}
+      <div className="glass border border-white/10 rounded-xl overflow-hidden">
+        <div className="px-5 py-3 border-b border-white/5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Available Opportunities ({opportunities.length})</div>
+        {opportunities.length === 0 ? (
+          <div className="p-8 text-center text-sm text-muted-foreground">No earn opportunities available right now.</div>
+        ) : opportunities.map((o: any, i: number) => (
+          <div key={o.id || i} className="flex items-center justify-between px-5 py-4 border-b border-white/5 last:border-0 hover:bg-white/5 transition-colors">
+            <div>
+              <p className="text-sm font-semibold text-white">{o.assetId || o.asset || "—"}</p>
+              <p className="text-xs text-muted-foreground">{o.providerId || "—"} · {o.type || "—"}</p>
+            </div>
+            <div className="flex items-center gap-3">
+              {o.apy != null && <span className="text-primary font-bold text-sm">{(o.apy * 100).toFixed(2)}% APY</span>}
+              <Button size="sm" className="bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 text-xs h-7" onClick={() => enterPosition(o.id)}>
+                Enter Position
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── NFTs Tab ─────────────────────────────────────────────────────────────────
+function NFTsTab() {
+  const api = useApi();
+  const [nfts, setNfts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api("/me/fireblocks/nfts").then(d => setNfts(Array.isArray(d) ? d : [])).finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div className="flex items-center justify-center h-64"><div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" /></div>;
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-white mb-1">NFTs</h2>
+        <p className="text-muted-foreground text-sm">Your NFT holdings in your Fireblocks vault</p>
+      </div>
+      {nfts.length === 0 ? (
+        <div className="glass border border-white/10 rounded-xl p-12 text-center">
+          <Image className="w-10 h-10 text-muted-foreground/30 mx-auto mb-4" />
+          <p className="text-white font-semibold mb-2">No NFTs found</p>
+          <p className="text-sm text-muted-foreground">NFTs held in your vault will appear here.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {nfts.map((n: any, i: number) => (
+            <div key={n.id || i} className="glass border border-white/10 rounded-xl overflow-hidden hover:border-primary/30 transition-colors">
+              {n.media?.[0]?.url ? (
+                <img src={n.media[0].url} alt={n.name || "NFT"} className="w-full aspect-square object-cover" />
+              ) : (
+                <div className="w-full aspect-square bg-gradient-to-br from-primary/10 to-purple-500/10 flex items-center justify-center">
+                  <Image className="w-10 h-10 text-muted-foreground/30" />
+                </div>
+              )}
+              <div className="p-3">
+                <p className="text-sm font-semibold text-white truncate">{n.name || "Unnamed NFT"}</p>
+                <p className="text-xs text-muted-foreground truncate">{n.collection?.name || n.blockchainDescriptor || "—"}</p>
+                {n.standard && <span className="text-xs px-1.5 py-0.5 rounded bg-white/5 text-muted-foreground mt-1 inline-block">{n.standard}</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 const TABS = [
   { id: "overview", label: "Overview", icon: LayoutDashboard, sub: "Account summary" },
@@ -699,6 +937,9 @@ const TABS = [
   { id: "keys", label: "API Keys", icon: Key, sub: "Access management" },
   { id: "notifications", label: "Notifications", icon: Bell, sub: "Alert preferences" },
   { id: "wallet", label: "Wallet", icon: Wallet, sub: "Connected wallets" },
+  { id: "staking", label: "Staking", icon: Layers, sub: "Earn staking rewards" },
+  { id: "earn", label: "Earn", icon: TrendingUp, sub: "Yield opportunities" },
+  { id: "nfts", label: "NFTs", icon: Image, sub: "Your NFT holdings" },
 ];
 
 export default function Dashboard() {
@@ -805,6 +1046,9 @@ export default function Dashboard() {
         {tab === "keys" && <ApiKeysTab apiKeys={data.apiKeys} onRefresh={handleRefresh} />}
         {tab === "notifications" && <NotificationsTab user={user} />}
         {tab === "wallet" && <WalletTab wallets={data.wallets} onRefresh={handleRefresh} />}
+        {tab === "staking" && <StakingTab />}
+        {tab === "earn" && <EarnTab />}
+        {tab === "nfts" && <NFTsTab />}
       </main>
     </div>
   );
