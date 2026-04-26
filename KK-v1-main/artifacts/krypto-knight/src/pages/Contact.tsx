@@ -44,14 +44,27 @@ export default function Contact() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const [submitError, setSubmitError] = useState("");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.email || !form.message) return;
     setSubmitting(true);
-    // Simulate a brief delay (replace with real API call if desired)
-    await new Promise(r => setTimeout(r, 1200));
-    setSubmitting(false);
-    setSubmitted(true);
+    setSubmitError("");
+    try {
+      const res = await fetch("https://api.krypto-knight.com/public/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error ?? "Unknown error");
+      setSubmitted(true);
+    } catch (err: any) {
+      setSubmitError(err.message ?? "Failed to send. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -261,6 +274,10 @@ export default function Contact() {
                       </span>
                     )}
                   </Button>
+
+                  {submitError && (
+                    <p className="text-red-400 text-sm text-center">{submitError}</p>
+                  )}
 
                   <p className="text-xs text-muted-foreground text-center">
                     By submitting this form you agree to our{" "}

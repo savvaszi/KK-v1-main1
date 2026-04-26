@@ -174,6 +174,7 @@ const OpenBusinessAccount = () => {
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const set = (field: keyof FormState, value: FormState[keyof FormState]) =>
     setForm(prev => ({ ...prev, [field]: value }));
@@ -214,9 +215,29 @@ const OpenBusinessAccount = () => {
     e.preventDefault();
     if (!validateStep(2)) return;
     setSubmitting(true);
-    await new Promise(r => setTimeout(r, 1500));
-    setSubmitting(false);
-    setSubmitted(true);
+    setSubmitError("");
+    try {
+      const fd = new FormData();
+      (Object.keys(form) as (keyof FormState)[]).forEach(key => {
+        const val = form[key];
+        if (typeof val === "string") fd.append(key, val);
+      });
+      if (form.incorporationDoc) fd.append("incorporationDoc", form.incorporationDoc);
+      if (form.additionalDoc) fd.append("additionalDoc", form.additionalDoc);
+      if (form.addressProof) fd.append("addressProof", form.addressProof);
+
+      const res = await fetch("https://api.krypto-knight.com/public/apply/business", {
+        method: "POST",
+        body: fd,
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error ?? "Submission failed");
+      setSubmitted(true);
+    } catch (err: any) {
+      setSubmitError(err.message ?? "Failed to submit. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const FieldError = ({ field }: { field: keyof FormState }) =>
@@ -656,6 +677,13 @@ const OpenBusinessAccount = () => {
                   CySEC CASP registration requirements (Reg. No. 015/24).
                 </p>
               </form>
+            )}
+
+            {/* Submit error */}
+            {submitError && step === STEPS.length - 1 && (
+              <p className="text-red-400 text-sm text-center mt-4 flex items-center justify-center gap-1">
+                <AlertCircle className="w-4 h-4" />{submitError}
+              </p>
             )}
 
             {/* Navigation */}

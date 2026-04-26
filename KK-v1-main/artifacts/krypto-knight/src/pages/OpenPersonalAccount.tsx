@@ -169,6 +169,7 @@ const OpenPersonalAccount = () => {
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({});
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const set = (field: keyof FormState, value: FormState[keyof FormState]) =>
     setForm(prev => ({ ...prev, [field]: value }));
@@ -217,9 +218,30 @@ const OpenPersonalAccount = () => {
     e.preventDefault();
     if (!validateStep(2)) return;
     setSubmitting(true);
-    await new Promise(r => setTimeout(r, 1500));
-    setSubmitting(false);
-    setSubmitted(true);
+    setSubmitError("");
+    try {
+      const fd = new FormData();
+      // Append all text fields
+      (Object.keys(form) as (keyof FormState)[]).forEach(key => {
+        const val = form[key];
+        if (typeof val === "string") fd.append(key, val);
+      });
+      // Append files
+      if (form.idDocument) fd.append("idDocument", form.idDocument);
+      if (form.addressProof) fd.append("addressProof", form.addressProof);
+
+      const res = await fetch("https://api.krypto-knight.com/public/apply/personal", {
+        method: "POST",
+        body: fd,
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error ?? "Submission failed");
+      setSubmitted(true);
+    } catch (err: any) {
+      setSubmitError(err.message ?? "Failed to submit. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const FieldError = ({ field }: { field: keyof FormState }) =>
@@ -675,6 +697,13 @@ const OpenPersonalAccount = () => {
                   Your data will be processed in accordance with our Privacy Policy and CySEC CASP registration requirements.
                 </p>
               </form>
+            )}
+
+            {/* Submit error */}
+            {submitError && step === STEPS.length - 1 && (
+              <p className="text-red-400 text-sm text-center mt-4 flex items-center justify-center gap-1">
+                <AlertCircle className="w-4 h-4" />{submitError}
+              </p>
             )}
 
             {/* Navigation buttons */}
