@@ -1,6 +1,0 @@
-:3000 {
-	root * /app/artifacts/krypto-knight/dist/public
-	encode gzip
-	file_server
-	try_files {path} /index.html
-}
