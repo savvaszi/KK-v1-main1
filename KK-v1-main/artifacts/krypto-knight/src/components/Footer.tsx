@@ -84,24 +84,29 @@ const Footer = () => {
             <h4 className="font-semibold text-white mb-6">Legal & Compliance</h4>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/terms-and-conditions" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Terms of Service
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/privacy-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Privacy Policy
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Regulatory Status
-                </a>
+                <Link href="/aml-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  AML Policy
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Security Disclosures
-                </a>
+                <Link href="/complaints-procedure" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  Complaints Procedure
+                </Link>
+              </li>
+              <li>
+                <Link href="/cookies" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  Cookie Policy
+                </Link>
               </li>
             </ul>
           </div>

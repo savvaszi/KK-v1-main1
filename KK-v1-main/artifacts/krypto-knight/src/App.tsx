@@ -14,6 +14,11 @@ import Dashboard from "@/pages/Dashboard";
 import OpenAccount from "@/pages/OpenAccount";
 import OpenPersonalAccount from "@/pages/OpenPersonalAccount";
 import OpenBusinessAccount from "@/pages/OpenBusinessAccount";
+import AmlPolicy from "@/pages/AmlPolicy";
+import ComplaintsProcedure from "@/pages/ComplaintsProcedure";
+import CookiesPolicy from "@/pages/CookiesPolicy";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import TermsAndConditions from "@/pages/TermsAndConditions";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +35,11 @@ function Router() {
       <Route path="/open-account" component={OpenAccount} />
       <Route path="/open-personal-account" component={OpenPersonalAccount} />
       <Route path="/open-business-account" component={OpenBusinessAccount} />
+      <Route path="/aml-policy" component={AmlPolicy} />
+      <Route path="/complaints-procedure" component={ComplaintsProcedure} />
+      <Route path="/cookies" component={CookiesPolicy} />
+      <Route path="/privacy-policy" component={PrivacyPolicy} />
+      <Route path="/terms-and-conditions" component={TermsAndConditions} />
       <Route component={NotFound} />
     </Switch>
   );
