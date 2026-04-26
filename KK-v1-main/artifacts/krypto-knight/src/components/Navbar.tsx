@@ -93,7 +93,7 @@ const Navbar = () => {
             </Button>
           )}
           <Button
-            onClick={() => navigate(user ? "/dashboard" : "/register")}
+            onClick={() => navigate(user ? "/dashboard" : "/open-account")}
             className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-[0_0_20px_rgba(0,255,156,0.3)] hover:shadow-[0_0_30px_rgba(0,255,156,0.5)] transition-all font-semibold"
             data-testid="btn-get-started"
           >
@@ -154,7 +154,7 @@ const Navbar = () => {
                   {user ? "My Dashboard" : "Client Login"}
                 </Button>
                 <Button
-                  onClick={() => { navigate(user ? "/dashboard" : "/register"); setMobileOpen(false); }}
+                  onClick={() => { navigate(user ? "/dashboard" : "/open-account"); setMobileOpen(false); }}
                   className="bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
                 >
                   {user ? "Dashboard" : "Get Started"}

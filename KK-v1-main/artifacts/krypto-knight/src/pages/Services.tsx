@@ -249,7 +249,7 @@ export default function Services() {
               Join KRYPTO KNIGHT today and experience a secure, efficient, and user-friendly approach to managing and exchanging your crypto assets.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link href="/register">
+              <Link href="/open-account">
                 <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 h-12 px-8 font-semibold shadow-[0_0_20px_rgba(0,255,156,0.3)] hover:shadow-[0_0_30px_rgba(0,255,156,0.5)] transition-all rounded-sm group">
                   Open Account
                   <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

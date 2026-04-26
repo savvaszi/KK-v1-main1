@@ -67,7 +67,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/register" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/open-account" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Open Account
                 </Link>
               </li>

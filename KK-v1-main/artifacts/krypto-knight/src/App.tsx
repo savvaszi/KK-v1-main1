@@ -11,6 +11,9 @@ import Contact from "@/pages/Contact";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Dashboard from "@/pages/Dashboard";
+import OpenAccount from "@/pages/OpenAccount";
+import OpenPersonalAccount from "@/pages/OpenPersonalAccount";
+import OpenBusinessAccount from "@/pages/OpenBusinessAccount";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +27,9 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/open-account" component={OpenAccount} />
+      <Route path="/open-personal-account" component={OpenPersonalAccount} />
+      <Route path="/open-business-account" component={OpenBusinessAccount} />
       <Route component={NotFound} />
     </Switch>
   );
