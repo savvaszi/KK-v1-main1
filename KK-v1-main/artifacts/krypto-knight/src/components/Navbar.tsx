@@ -13,6 +13,9 @@ const navLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
+// Anchor links (#section) use native <a> tags; route links use Wouter <Link>
+const isAnchorLink = (href: string) => href.startsWith("/#");
+
 const Navbar = () => {
   const { user } = useAuth();
   const [, navigate] = useLocation();
@@ -41,20 +44,31 @@ const Navbar = () => {
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map(link => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`text-sm font-medium transition-colors ${
-                isActive(link.href)
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-white"
-              }`}
-              data-testid={`link-${link.label.toLowerCase()}`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {navLinks.map(link =>
+            isAnchorLink(link.href) ? (
+              <a
+                key={link.href}
+                href={link.href.replace(/^\/#/, "/#")}
+                className="text-sm font-medium text-muted-foreground hover:text-white transition-colors"
+                data-testid={`link-${link.label.toLowerCase()}`}
+              >
+                {link.label}
+              </a>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`text-sm font-medium transition-colors ${
+                  isActive(link.href)
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-white"
+                }`}
+                data-testid={`link-${link.label.toLowerCase()}`}
+              >
+                {link.label}
+              </Link>
+            )
+          )}
         </nav>
 
         {/* CTA buttons */}
@@ -108,18 +122,29 @@ const Navbar = () => {
             className="md:hidden bg-background/95 backdrop-blur-md border-t border-white/5 overflow-hidden"
           >
             <div className="container mx-auto px-6 py-6 flex flex-col gap-4">
-              {navLinks.map(link => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={`text-base font-medium transition-colors py-1 ${
-                    isActive(link.href) ? "text-primary" : "text-muted-foreground hover:text-white"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map(link =>
+                isAnchorLink(link.href) ? (
+                  <a
+                    key={link.href}
+                    href={link.href.replace(/^\/#/, "/#")}
+                    onClick={() => setMobileOpen(false)}
+                    className="text-base font-medium text-muted-foreground hover:text-white transition-colors py-1"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={`text-base font-medium transition-colors py-1 ${
+                      isActive(link.href) ? "text-primary" : "text-muted-foreground hover:text-white"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
               <div className="flex flex-col gap-3 mt-2 pt-4 border-t border-white/5">
                 <Button
                   onClick={() => { navigate(user ? "/dashboard" : "/login"); setMobileOpen(false); }}
