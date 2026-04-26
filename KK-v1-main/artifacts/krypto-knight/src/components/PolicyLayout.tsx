@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { LucideIcon } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 interface PolicyLayoutProps {
   icon: LucideIcon;
@@ -12,13 +14,15 @@ interface PolicyLayoutProps {
 /** Shared wrapper for all legal / policy pages */
 export default function PolicyLayout({ icon: Icon, badge, title, effectiveDate, children }: PolicyLayoutProps) {
   return (
-    <div className="min-h-screen bg-background pt-28 pb-24 px-6">
+    <div className="min-h-screen bg-background">
+      <Navbar />
+
       {/* Subtle glow */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-primary/5 rounded-full blur-[120px]" />
       </div>
 
-      <div className="container relative z-10 mx-auto max-w-4xl">
+      <div className="container relative z-10 mx-auto max-w-4xl pt-28 pb-24 px-6">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -56,6 +60,8 @@ export default function PolicyLayout({ icon: Icon, badge, title, effectiveDate, 
           © {new Date().getFullYear()} Krypto Knight Ltd — Company Reg. HE 434989 — CySEC CASP No. 015/24
         </motion.p>
       </div>
+
+      <Footer />
     </div>
   );
 }
