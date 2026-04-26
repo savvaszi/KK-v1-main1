@@ -220,10 +220,34 @@ function SecurityTab({ user, security, sessions, onRefresh }: { user: any; secur
   const score = security?.score ?? 0;
   const scoreColor = score >= 70 ? "text-primary" : score >= 40 ? "text-amber-400" : "text-red-400";
   const scoreLabel = score >= 70 ? "Strong" : score >= 40 ? "Fair" : "At Risk";
+  const [secMsg, setSecMsg] = useState("");
+  const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" });
+  const [savingPw, setSavingPw] = useState(false);
 
   const revoke = async (id: string) => {
     await api(`/me/sessions/${id}`, { method: "DELETE" });
     onRefresh();
+  };
+
+  const verifyEmail = async () => {
+    try { await api("/me/security/verify-email", { method: "POST" }); setSecMsg("Email verified!"); onRefresh(); }
+    catch (e: any) { setSecMsg(e.message); }
+  };
+
+  const enable2fa = async () => {
+    try { await api("/me/security/enable-2fa", { method: "POST" }); setSecMsg("2FA enabled!"); onRefresh(); }
+    catch (e: any) { setSecMsg(e.message); }
+  };
+
+  const changePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (pwForm.next !== pwForm.confirm) { setSecMsg("New passwords don't match."); return; }
+    setSavingPw(true); setSecMsg("");
+    try {
+      await api("/me/security/change-password", { method: "POST", body: JSON.stringify({ currentPassword: pwForm.current, newPassword: pwForm.next }) });
+      setSecMsg("Password changed successfully."); setPwForm({ current: "", next: "", confirm: "" });
+    } catch (e: any) { setSecMsg(e.message); }
+    setSavingPw(false);
   };
 
   return (
@@ -249,6 +273,12 @@ function SecurityTab({ user, security, sessions, onRefresh }: { user: any; secur
         </div>
       </div>
 
+      {secMsg && (
+        <Alert className={`border-primary/30 bg-primary/10 ${secMsg.toLowerCase().includes("error") || secMsg.toLowerCase().includes("fail") || secMsg.toLowerCase().includes("wrong") || secMsg.toLowerCase().includes("match") ? "border-red-500/30 bg-red-500/10" : ""}`}>
+          <AlertDescription className={secMsg.toLowerCase().includes("error") || secMsg.toLowerCase().includes("fail") || secMsg.toLowerCase().includes("wrong") || secMsg.toLowerCase().includes("match") ? "text-red-400" : "text-primary"}>{secMsg}</AlertDescription>
+        </Alert>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="glass border border-white/10 rounded-xl p-5 flex items-center justify-between">
           <div>
@@ -257,7 +287,7 @@ function SecurityTab({ user, security, sessions, onRefresh }: { user: any; secur
           </div>
           {user.twoFaEnabled
             ? <span className="text-xs px-3 py-1 rounded-full bg-primary/20 text-primary font-medium">Enabled</span>
-            : <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-black font-semibold">Enable</Button>}
+            : <Button size="sm" onClick={enable2fa} className="bg-amber-500 hover:bg-amber-600 text-black font-semibold">Enable</Button>}
         </div>
         <div className="glass border border-white/10 rounded-xl p-5 flex items-center justify-between">
           <div>
@@ -266,8 +296,30 @@ function SecurityTab({ user, security, sessions, onRefresh }: { user: any; secur
           </div>
           {user.emailVerified
             ? <CheckCircle2 className="w-5 h-5 text-primary" />
-            : <Button size="sm" variant="outline" className="border-primary/30 text-primary hover:bg-primary/10">Verify</Button>}
+            : <Button size="sm" variant="outline" onClick={verifyEmail} className="border-primary/30 text-primary hover:bg-primary/10">Verify</Button>}
         </div>
+      </div>
+
+      {/* Change Password */}
+      <div className="glass border border-white/10 rounded-xl p-6 max-w-md">
+        <h3 className="font-semibold text-white mb-4">Change Password</h3>
+        <form onSubmit={changePassword} className="space-y-3">
+          <div className="space-y-1.5">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Current Password</Label>
+            <Input type="password" value={pwForm.current} onChange={e => setPwForm(f => ({ ...f, current: e.target.value }))} className="bg-black/30 border-white/10 text-white focus:border-primary" required />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">New Password</Label>
+            <Input type="password" value={pwForm.next} onChange={e => setPwForm(f => ({ ...f, next: e.target.value }))} className="bg-black/30 border-white/10 text-white focus:border-primary" required />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Confirm New Password</Label>
+            <Input type="password" value={pwForm.confirm} onChange={e => setPwForm(f => ({ ...f, confirm: e.target.value }))} className="bg-black/30 border-white/10 text-white focus:border-primary" required />
+          </div>
+          <Button type="submit" disabled={savingPw} className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold mt-2">
+            {savingPw ? "Changing…" : "Change Password"}
+          </Button>
+        </form>
       </div>
 
       <div className="glass border border-white/10 rounded-xl p-5">
@@ -319,7 +371,7 @@ function ApiKeysTab({ apiKeys, onRefresh }: { apiKeys: any[]; onRefresh: () => v
     setCreating(true);
     try {
       const data = await api("/me/api-keys", { method: "POST", body: JSON.stringify({ name }) });
-      setNewKey(data.key);
+      setNewKey(data.fullKey);
       setName("");
       onRefresh();
     } catch { /* ignore */ }
@@ -361,10 +413,10 @@ function ApiKeysTab({ apiKeys, onRefresh }: { apiKeys: any[]; onRefresh: () => v
             <div key={k.id} className="flex items-center justify-between py-3 border-b border-white/5 last:border-0">
               <div>
                 <p className="text-sm font-medium text-white">{k.name}</p>
-                <p className="text-xs text-muted-foreground">{k.keyPrefix}… · Created {timeAgo(k.createdAt)}</p>
+                <p className="text-xs text-muted-foreground">{k.keyId}… · Created {timeAgo(k.createdAt)}</p>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`text-xs px-2 py-0.5 rounded-full ${k.isActive ? "bg-primary/20 text-primary" : "bg-red-500/20 text-red-400"}`}>{k.isActive ? "Active" : "Revoked"}</span>
+                <span className={`text-xs px-2 py-0.5 rounded-full ${k.status === "active" ? "bg-primary/20 text-primary" : "bg-red-500/20 text-red-400"}`}>{k.status === "active" ? "Active" : "Revoked"}</span>
                 <Button size="sm" variant="ghost" className="text-red-400 hover:text-red-300 hover:bg-red-500/10 p-1.5" onClick={async () => { await api(`/me/api-keys/${k.id}`, { method: "DELETE" }); onRefresh(); }}>
                   <Trash2 className="w-3.5 h-3.5" />
                 </Button>
@@ -383,7 +435,13 @@ function NotificationsTab({ user }: { user: any }) {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    api("/me/notifications").then(d => d && setPrefs(d.preferences));
+    api("/me/notifications").then(d => d && setPrefs({
+      emailNotifications: d.emailNotifications ?? true,
+      smsNotifications: d.smsNotifications ?? false,
+      pushNotifications: d.pushNotifications ?? false,
+      securityAlerts: d.securityAlerts ?? true,
+      marketingEmails: d.marketingEmails ?? false,
+    }));
   }, []);
 
   const save = async () => {
@@ -962,10 +1020,10 @@ export default function Dashboard() {
       ]);
       setData({
         security: sec.status === "fulfilled" ? sec.value : null,
-        apiKeys: keys.status === "fulfilled" ? (keys.value?.keys ?? []) : [],
-        sessions: sess.status === "fulfilled" ? (sess.value?.sessions ?? []) : [],
-        audit: aud.status === "fulfilled" ? (aud.value?.logs ?? []) : [],
-        wallets: wal.status === "fulfilled" ? (wal.value?.wallets ?? []) : [],
+        apiKeys: keys.status === "fulfilled" ? (Array.isArray(keys.value) ? keys.value : []) : [],
+        sessions: sess.status === "fulfilled" ? (Array.isArray(sess.value) ? sess.value : []) : [],
+        audit: aud.status === "fulfilled" ? (Array.isArray(aud.value) ? aud.value : []) : [],
+        wallets: wal.status === "fulfilled" ? (Array.isArray(wal.value) ? wal.value : []) : [],
       });
     } catch { /* ignore */ }
   }, [user, api]);
