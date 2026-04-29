@@ -94,9 +94,9 @@ const Footer = () => {
         <div className="border border-white/5 rounded-xl p-4 mb-8 bg-white/2">
           <p className="text-xs text-muted-foreground leading-relaxed">
             <span className="text-white font-semibold">Risk Warning: </span>
-            Cryptocurrencies come with a great risk of losing money rapidly due to high volatility.
-            You should consider whether you understand how Cryptocurrencies trading works and whether
-            you can afford to take the high risk of losing your money.
+            Cryptocurrencies involve a significant risk of losing money due to high market volatility.
+            Please ensure you understand how crypto asset trading works and that you are comfortable
+            with the level of risk involved before investing.
           </p>
         </div>
 
