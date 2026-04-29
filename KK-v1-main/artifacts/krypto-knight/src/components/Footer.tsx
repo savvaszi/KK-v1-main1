@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="bg-background border-t border-white/5 pt-20 pb-10">
       <div className="container mx-auto px-6 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
           {/* Brand */}
           <div className="col-span-1 md:col-span-1">
             <Link href="/" className="flex items-center gap-3 mb-6">
@@ -25,33 +25,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Platform */}
-          <div>
-            <h4 className="font-semibold text-white mb-6">Platform</h4>
-            <ul className="space-y-3">
-              <li>
-                <Link href="/services" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Exchange Services
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Institutional Custody
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Trading Platform
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Fund Management
-                </Link>
-              </li>
-            </ul>
-          </div>
-
           {/* Company */}
           <div>
             <h4 className="font-semibold text-white mb-6">Company</h4>
@@ -59,6 +32,11 @@ const Footer = () => {
               <li>
                 <Link href="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   About Us
+                </Link>
+              </li>
+              <li>
+                <Link href="/services" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  Services
                 </Link>
               </li>
               <li>
@@ -81,7 +59,7 @@ const Footer = () => {
 
           {/* Legal */}
           <div>
-            <h4 className="font-semibold text-white mb-6">Legal & Compliance</h4>
+            <h4 className="font-semibold text-white mb-6">Legal</h4>
             <ul className="space-y-3">
               <li>
                 <Link href="/terms-and-conditions" className="text-sm text-muted-foreground hover:text-primary transition-colors">

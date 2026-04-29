@@ -4,8 +4,6 @@ import Footer from "@/components/Footer";
 import HeroSection from "./sections/HeroSection";
 import TrustStrip from "./sections/TrustStrip";
 import CoreServices from "./sections/CoreServices";
-import PlatformShowcase from "./sections/PlatformShowcase";
-import WhyKryptoKnight from "./sections/WhyKryptoKnight";
 import UseCases from "./sections/UseCases";
 import FinalCta from "./sections/FinalCta";
 
@@ -16,9 +14,7 @@ export default function Home() {
       <main>
         <HeroSection />
         <TrustStrip />
-        <PlatformShowcase />
         <CoreServices />
-        <WhyKryptoKnight />
         <UseCases />
         <FinalCta />
       </main>
