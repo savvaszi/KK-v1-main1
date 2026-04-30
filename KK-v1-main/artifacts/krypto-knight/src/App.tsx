@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/lib/auth";
 import CookieBanner from "@/components/CookieBanner";
+import BackToTop from "@/components/BackToTop";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import About from "@/pages/About";
@@ -54,6 +55,7 @@ function App() {
           <WouterRouter>
             <Router />
             <CookieBanner />
+            <BackToTop />
           </WouterRouter>
           <Toaster />
         </AuthProvider>
