@@ -10,6 +10,7 @@ import {
   LayoutDashboard, User, Shield, Bell, Wallet, LogOut,
   Key, Clock, CheckCircle2, XCircle, AlertTriangle, Copy, Plus, Trash2,
   Layers, TrendingUp, Image, ArrowRightLeft, Star, BarChart2, DollarSign,
+  Sun, Moon,
 } from "lucide-react";
 import LiveTicker from "@/components/LiveTicker";
 import PortfolioTab from "./dashboard/PortfolioTab";
@@ -36,6 +37,25 @@ function useApi() {
     if (!data.success) throw new Error(data.error || "Request failed");
     return data.data;
   }, [token, logout]);
+}
+
+function useTheme() {
+  const [dark, setDark] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem("kk_theme") !== "light";
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (dark) {
+      root.classList.remove("light");
+    } else {
+      root.classList.add("light");
+    }
+    localStorage.setItem("kk_theme", dark ? "dark" : "light");
+  }, [dark]);
+
+  return { dark, toggle: () => setDark(d => !d) };
 }
 
 function timeAgo(iso: string) {
@@ -828,6 +848,7 @@ export default function Dashboard() {
   const [, navigate] = useLocation();
   const [tab, setTab] = useState("overview");
   const api = useApi();
+  const { dark, toggle: toggleTheme } = useTheme();
   const [portfolioUsd, setPortfolioUsd] = useState<number|null>(null);
 
   const [data, setData] = useState<any>({ security:null, apiKeys:[], sessions:[], audit:[], wallets:[] });
@@ -923,7 +944,12 @@ export default function Dashboard() {
             ))}
           </nav>
 
-          <div className="p-4 border-t border-white/10 shrink-0">
+          <div className="p-4 border-t border-white/10 shrink-0 space-y-1">
+            <button onClick={toggleTheme}
+              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-white transition-colors w-full px-3 py-2 rounded-lg hover:bg-white/5">
+              {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {dark ? "Light Mode" : "Dark Mode"}
+            </button>
             <button onClick={async () => { await logout(); navigate("/"); }}
               className="flex items-center gap-2 text-sm text-muted-foreground hover:text-white transition-colors w-full px-3 py-2 rounded-lg hover:bg-white/5">
               <LogOut className="w-4 h-4" />Sign Out

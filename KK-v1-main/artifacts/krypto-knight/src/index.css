@@ -149,6 +149,77 @@
   /* Same as root since we default to dark mode */
 }
 
+/* ─── Light Mode ──────────────────────────────────────────── */
+.light {
+  --button-outline: rgba(0,0,0,.12);
+  --badge-outline: rgba(0,0,0,.06);
+  --opaque-button-border-intensity: -9;
+  --elevate-1: rgba(0,0,0,.03);
+  --elevate-2: rgba(0,0,0,.07);
+
+  --background: 210 20% 96%;
+  --foreground: 240 20% 8%;
+  --border: 220 14% 82%;
+  --input: 220 14% 82%;
+  --ring: 157 85% 32%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 240 20% 8%;
+  --card-border: 220 14% 82%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 20% 8%;
+  --popover-border: 220 14% 82%;
+
+  --primary: 157 85% 32%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 220 14% 91%;
+  --secondary-foreground: 240 20% 8%;
+
+  --muted: 220 14% 91%;
+  --muted-foreground: 240 5% 42%;
+
+  --accent: 157 85% 32%;
+  --accent-foreground: 0 0% 100%;
+
+  --destructive: 0 84% 50%;
+  --destructive-foreground: 0 0% 100%;
+
+  --sidebar: 0 0% 99%;
+  --sidebar-foreground: 240 20% 8%;
+  --sidebar-border: 220 14% 82%;
+  --sidebar-primary: 157 85% 32%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 220 14% 91%;
+  --sidebar-accent-foreground: 240 20% 8%;
+  --sidebar-ring: 157 85% 32%;
+}
+
+.light .glass {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.light .glass-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.97) 0%, rgba(246,248,252,0.97) 100%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 180, 100, 0.14);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.07);
+}
+
+/* In light mode: override hardcoded dark-mode text so it reads on light surfaces */
+.light .text-white { color: hsl(240 20% 8%); }
+/* Keep white text on intentionally coloured elements */
+.light .text-primary-foreground { color: hsl(0 0% 100%); }
+.light .bg-black\/30,
+.light .bg-black\/40 { background-color: rgba(0,0,0,0.04) !important; }
+.light [class*="hover\:bg-white\/5"]:hover { background-color: rgba(0,0,0,0.04) !important; }
+.light [class*="bg-white\/5"] { background-color: rgba(0,0,0,0.04) !important; }
+.light [class*="border-white\/"] { border-color: rgba(0,0,0,0.08) !important; }
+
 @layer base {
   * {
     @apply border-border;
