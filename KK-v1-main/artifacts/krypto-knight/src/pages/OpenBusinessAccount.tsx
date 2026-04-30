@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import {
   Building2, FileText, MapPin, ChevronRight, ChevronLeft,
   Check, Upload, X, AlertCircle,
@@ -274,7 +276,9 @@ const OpenBusinessAccount = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pt-28 pb-20 px-6">
+    <>
+    <Navbar />
+    <div className="bg-background pt-28 pb-20 px-6">
       <div className="container mx-auto max-w-3xl">
 
         {/* Header */}
@@ -736,6 +740,8 @@ const OpenBusinessAccount = () => {
         </AnimatePresence>
       </div>
     </div>
+    <Footer />
+    </>
   );
 };
 

@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { User, Building2, ChevronRight, ShieldCheck } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const fade = (delay = 0) => ({
   initial: { opacity: 0, y: 24 },
@@ -11,7 +13,9 @@ const fade = (delay = 0) => ({
 
 export default function OpenAccount() {
   return (
-    <div className="min-h-screen bg-background pt-28 pb-20 px-6">
+    <>
+    <Navbar />
+    <div className="bg-background pt-28 pb-20 px-6">
       <div className="container mx-auto max-w-3xl">
 
         {/* Header */}
@@ -104,5 +108,7 @@ export default function OpenAccount() {
         </motion.p>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
