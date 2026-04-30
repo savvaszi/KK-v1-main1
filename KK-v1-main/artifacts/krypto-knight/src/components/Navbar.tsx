@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
+  { label: "Home", href: "/" },
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
