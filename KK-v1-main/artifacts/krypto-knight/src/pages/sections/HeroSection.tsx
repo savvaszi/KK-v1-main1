@@ -1,9 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, ArrowRight, Activity } from "lucide-react";
 
 const HeroSection = () => {
+  const [, navigate] = useLocation();
   return (
     <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
       {/* Background Effects */}
@@ -28,26 +30,26 @@ const HeroSection = () => {
             </div>
             
             <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.1]">
-              Institutional Crypto <br />
-              Infrastructure for the <br />
-              <span className="text-gradient-primary">Next Financial Era</span>
+              Your Gateway to Digital Assets —<br />
+              Regulated, Secure, and <br />
+              <span className="text-gradient-primary">Built for Everyone</span>
             </h1>
-            
+
             <p className="text-lg lg:text-xl text-muted-foreground mb-10 max-w-xl font-light leading-relaxed">
-              The platform serious enterprises, funds, and fintech companies trust for regulated, compliant, and scalable digital asset transactions.
+              Whether you are an individual taking your first steps into crypto or an institution managing digital assets at scale, Krypto Knight gives you access to a fully regulated, secure, and straightforward platform — licensed by CySEC and built for the MiCAR era.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-4">
-              <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90 h-14 px-8 text-base font-semibold shadow-[0_0_20px_rgba(0,255,156,0.2)] hover:shadow-[0_0_30px_rgba(0,255,156,0.4)] transition-all rounded-sm group" data-testid="btn-hero-get-started">
-                Get Started
+              <Button size="lg" onClick={() => navigate("/open-account")} className="bg-primary text-primary-foreground hover:bg-primary/90 h-14 px-8 text-base font-semibold shadow-[0_0_20px_rgba(0,255,156,0.2)] hover:shadow-[0_0_30px_rgba(0,255,156,0.4)] transition-all rounded-sm group" data-testid="btn-hero-get-started">
+                Open Account
                 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button size="lg" variant="outline" className="h-14 px-8 text-base font-semibold border-white/10 hover:bg-white/5 hover:text-white rounded-sm group" data-testid="btn-hero-request-access">
+              <Button size="lg" variant="outline" onClick={() => navigate("/contact")} className="h-14 px-8 text-base font-semibold border-white/10 hover:bg-white/5 hover:text-white rounded-sm group" data-testid="btn-hero-request-access">
                 <Activity className="mr-2 w-5 h-5 text-primary group-hover:text-primary transition-colors" />
-                Request Access
+                Contact Us
               </Button>
             </div>
-            
+
             <div className="mt-12 flex items-center gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_5px_rgba(0,255,156,1)]"></div>
@@ -55,11 +57,15 @@ const HeroSection = () => {
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_5px_rgba(0,255,156,1)]"></div>
-                <span>ISO 27001 Certified</span>
+                <span>CySEC Licensed</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_5px_rgba(0,255,156,1)]"></div>
-                <span>SOC 2 Type II</span>
+                <span>KYC/AML Integrated</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_5px_rgba(0,255,156,1)]"></div>
+                <span>Fireblocks Powered</span>
               </div>
             </div>
           </motion.div>

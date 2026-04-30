@@ -10,7 +10,7 @@ import {
   LayoutDashboard, User, Shield, Bell, Wallet, LogOut,
   Key, Clock, CheckCircle2, XCircle, AlertTriangle, Copy, Plus, Trash2,
   Layers, TrendingUp, Image, ArrowRightLeft, Star, BarChart2, DollarSign,
-  Sun, Moon, Home,
+  Sun, Moon, Home, Menu, X,
 } from "lucide-react";
 import LiveTicker from "@/components/LiveTicker";
 import PortfolioTab from "./dashboard/PortfolioTab";
@@ -914,6 +914,7 @@ export default function Dashboard() {
   const { user, logout, loading, refreshUser } = useAuth();
   const [, navigate] = useLocation();
   const [tab, setTab] = useState("overview");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const api = useApi();
   const { dark, toggle: toggleTheme, themeClass } = useTheme();
   const [portfolioUsd, setPortfolioUsd] = useState<number|null>(null);
@@ -961,14 +962,31 @@ export default function Dashboard() {
       <LiveTicker />
 
       <div className="flex flex-1 overflow-hidden">
+        {/* Mobile sidebar overlay backdrop */}
+        {sidebarOpen && (
+          <div
+            className="fixed inset-0 z-40 bg-black/60 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar */}
-        <aside className="w-64 shrink-0 glass border-r border-white/10 flex flex-col overflow-y-auto">
-          <Link href="/" className="flex items-center gap-2 px-5 py-4 border-b border-white/10 shrink-0">
-            <div className="w-8 h-8 rounded-full bg-black/50 border border-primary/20 flex items-center justify-center">
-              <img src="/knight-head.png" alt="KK" className="w-5 h-5 drop-shadow-[0_0_6px_rgba(0,255,156,0.8)]" />
-            </div>
-            <span className="font-bold text-sm tracking-tight text-white">KRYPTO KNIGHT</span>
-          </Link>
+        <aside className={`fixed inset-y-0 left-0 z-50 w-64 md:relative md:z-auto md:translate-x-0 glass border-r border-white/10 flex flex-col overflow-y-auto transition-transform duration-200 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+          <div className="flex items-center justify-between border-b border-white/10 shrink-0">
+            <Link href="/" className="flex items-center gap-2 px-5 py-4" onClick={() => setSidebarOpen(false)}>
+              <div className="w-8 h-8 rounded-full bg-black/50 border border-primary/20 flex items-center justify-center">
+                <img src="/knight-head.png" alt="KK" className="w-5 h-5 drop-shadow-[0_0_6px_rgba(0,255,156,0.8)]" />
+              </div>
+              <span className="font-bold text-sm tracking-tight text-white">KRYPTO KNIGHT</span>
+            </Link>
+            <button
+              className="md:hidden p-3 text-muted-foreground hover:text-white"
+              onClick={() => setSidebarOpen(false)}
+              aria-label="Close sidebar"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
           {/* User + Balance Card */}
           <div className="px-4 py-4 border-b border-white/5 shrink-0">
@@ -1001,6 +1019,7 @@ export default function Dashboard() {
           <nav className="flex-1 py-3 px-3">
             {/* Home link */}
             <Link href="/"
+              onClick={() => setSidebarOpen(false)}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg mb-2 text-left transition-colors hover:bg-white/5 border border-white/5 hover:border-white/10">
               <Home className="w-4 h-4 shrink-0 text-muted-foreground" />
               <div>
@@ -1009,7 +1028,7 @@ export default function Dashboard() {
               </div>
             </Link>
             {TABS.map(({ id, label, icon: Icon, sub }) => (
-              <button key={id} onClick={() => setTab(id)}
+              <button key={id} onClick={() => { setTab(id); setSidebarOpen(false); }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg mb-0.5 text-left transition-colors ${tab===id ? "bg-primary/10 border border-primary/20" : "hover:bg-white/5"}`}>
                 <Icon className={`w-4 h-4 shrink-0 ${tab===id?"text-primary":"text-muted-foreground"}`} />
                 <div>
@@ -1032,17 +1051,25 @@ export default function Dashboard() {
         {/* Right panel: topbar + content */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* Topbar */}
-          <div className="h-14 shrink-0 glass border-b border-white/10 flex items-center justify-end px-5">
+          <div className="h-14 shrink-0 glass border-b border-white/10 flex items-center justify-between px-5">
+            <button
+              className="md:hidden p-1.5 -ml-1 text-muted-foreground hover:text-white transition-colors rounded-lg hover:bg-white/5"
+              onClick={() => setSidebarOpen(o => !o)}
+              aria-label="Open sidebar"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+            <div className="hidden md:block" /> {/* spacer on desktop */}
             <ProfileDropdown
               user={user}
               tab={tab}
-              setTab={setTab}
+              setTab={(t) => { setTab(t); setSidebarOpen(false); }}
               onLogout={async () => { await logout(); navigate("/"); }}
             />
           </div>
 
           {/* Main Content */}
-          <main className="flex-1 overflow-auto p-6 lg:p-8">
+          <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8">
             {tab === "overview"      && <OverviewTab user={user} security={data.security} apiKeys={data.apiKeys} audit={data.audit} />}
             {tab === "portfolio"     && <PortfolioTab useApi={useApi} />}
             {tab === "exchange"      && <ExchangeTab useApi={useApi} />}
