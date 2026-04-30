@@ -10,7 +10,7 @@ import {
   LayoutDashboard, User, Shield, Bell, Wallet, LogOut,
   Key, Clock, CheckCircle2, XCircle, AlertTriangle, Copy, Plus, Trash2,
   Layers, TrendingUp, Image, ArrowRightLeft, Star, BarChart2, DollarSign,
-  Sun, Moon,
+  Sun, Moon, Home,
 } from "lucide-react";
 import LiveTicker from "@/components/LiveTicker";
 import PortfolioTab from "./dashboard/PortfolioTab";
@@ -935,6 +935,15 @@ export default function Dashboard() {
           </div>
 
           <nav className="flex-1 py-3 px-3">
+            {/* Home link */}
+            <Link href="/"
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg mb-2 text-left transition-colors hover:bg-white/5 border border-white/5 hover:border-white/10">
+              <Home className="w-4 h-4 shrink-0 text-muted-foreground" />
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Home</p>
+                <p className="text-xs text-muted-foreground/60">Back to site</p>
+              </div>
+            </Link>
             {TABS.map(({ id, label, icon: Icon, sub }) => (
               <button key={id} onClick={() => setTab(id)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg mb-0.5 text-left transition-colors ${tab===id ? "bg-primary/10 border border-primary/20" : "hover:bg-white/5"}`}>
