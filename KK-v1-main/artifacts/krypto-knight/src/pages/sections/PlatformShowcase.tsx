@@ -29,10 +29,10 @@ const PlatformShowcase = () => {
       <div className="container mx-auto px-6 lg:px-12 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">
-            Institutional-Grade Interface
+            The Krypto Knight Platform
           </h2>
           <p className="text-lg text-muted-foreground">
-            A commanding dashboard designed for high-volume trading, treasury management, and multi-asset portfolio tracking.
+            Your digital assets, your way. Our platform gives you a clear and complete view of your holdings, your transactions, and your activity — all in one place. We have designed the experience to feel straightforward and reassuring, whether you are logging in for the first time or managing a complex multi-asset portfolio. Backed by institutional-grade infrastructure and built within a fully regulated framework, you can engage with confidence knowing everything is secure, compliant, and working the way it should.
           </p>
         </div>
 

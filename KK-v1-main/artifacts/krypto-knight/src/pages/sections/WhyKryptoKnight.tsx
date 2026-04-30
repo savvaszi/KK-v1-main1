@@ -6,15 +6,23 @@ const WhyKryptoKnight = () => {
   const points = [
     {
       title: "Regulatory First",
-      desc: "Licensed by CySEC and built for MiCA compliance from day one. We don't adapt to regulations; we are built on them."
+      desc: "Licensed by CySEC and fully aligned with MiCAR from day one. Every service we offer is authorised, supervised, and compliant — giving every client, retail or institutional, the same level of regulatory protection."
     },
     {
-      title: "Enterprise Architecture",
-      desc: "Isolated accounts, strict role-based access controls, and custom approval workflows designed for corporate governance."
+      title: "Powered by Fireblocks",
+      desc: "Our custody and transaction infrastructure runs on Fireblocks — the world's leading institutional digital asset platform. Your assets benefit from MPC security, policy-based approval workflows, and real-time transaction monitoring — regardless of your account size."
     },
     {
-      title: "Audited & Proven",
-      desc: "Regular Proof of Reserves, SOC 2 Type II certification, and code audited by top-tier security firms."
+      title: "Segregated Client Accounts",
+      desc: "All client funds — whether personal or corporate — are held in fully segregated accounts, completely separate from Krypto Knight's own operational finances. Your money is yours, always."
+    },
+    {
+      title: "KYC/AML Integrated",
+      desc: "Every client is onboarded through a rigorous, automated KYC and AML screening process — ensuring the highest standards of client due diligence and a smooth, straightforward onboarding experience for all."
+    },
+    {
+      title: "Transparent & Accessible",
+      desc: "No hidden fees, no opaque processes. We believe every client deserves to understand exactly what they are getting, what it costs, and how their assets are being managed."
     }
   ];
 
@@ -30,13 +38,13 @@ const WhyKryptoKnight = () => {
             transition={{ duration: 0.8 }}
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-white text-sm font-medium mb-6">
-              Not Another Crypto Company
+              Built for Trust
             </div>
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6">
-              Built for <span className="text-gradient-primary">Trust</span>
+              Built for Trust. <span className="text-gradient-primary">Built for You.</span>
             </h2>
             <p className="text-lg text-muted-foreground mb-10 leading-relaxed">
-              We operate at the intersection of traditional finance and digital assets. Krypto Knight abstracts away technical complexity and regulatory uncertainty, allowing you to focus on strategy.
+              Whether you are new to crypto or a seasoned professional, you deserve a platform that puts security, transparency, and regulation first. That is exactly what Krypto Knight is built to deliver.
             </p>
 
             <div className="space-y-6">

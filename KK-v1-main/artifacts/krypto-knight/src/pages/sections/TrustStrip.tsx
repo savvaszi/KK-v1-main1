@@ -3,11 +3,10 @@ import { motion } from "framer-motion";
 
 const TrustStrip = () => {
   const partners = [
-    { name: "CySEC", subtitle: "Registered" },
-    { name: "MiCA", subtitle: "Compliant" },
-    { name: "ISO 27001", subtitle: "Certified" },
-    { name: "SOC 2 Type II", subtitle: "Audited" },
+    { name: "MiCA", subtitle: "Ready" },
+    { name: "CySEC", subtitle: "Licensed" },
     { name: "KYC/AML", subtitle: "Integrated" },
+    { name: "Fireblocks", subtitle: "Powered" },
   ];
 
   return (

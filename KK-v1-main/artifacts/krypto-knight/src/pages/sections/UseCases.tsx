@@ -4,24 +4,24 @@ import { Building2, Wallet, Blocks, LineChart } from "lucide-react";
 
 const useCases = [
   {
-    icon: Building2,
-    title: "Enterprises",
-    desc: "Convert fiat to crypto instantly, manage vendor payments in USDC, and hold Bitcoin on your corporate balance sheet securely.",
-  },
-  {
     icon: Wallet,
-    title: "Funds & Asset Managers",
-    desc: "Execute block trades with smart routing, access prime brokerage services, and generate yield on idle stablecoins.",
+    title: "Individual Investors",
+    desc: "Whether you are buying crypto for the first time or managing a growing personal portfolio, our platform makes it simple, safe, and fully regulated — with real support whenever you need it.",
   },
   {
-    icon: Blocks,
-    title: "Fintech Startups",
-    desc: "Embed crypto buying, selling, and holding into your app using our white-label REST APIs and regulatory licenses.",
+    icon: Building2,
+    title: "Enterprises & Corporates",
+    desc: "Convert fiat to crypto, manage treasury holdings in digital assets, and execute cross-border settlements within a fully regulated and auditable framework.",
   },
   {
     icon: LineChart,
-    title: "Web3 Companies",
-    desc: "Manage protocol treasuries, execute safe multi-sig payroll, and off-ramp to fiat globally without bank friction.",
+    title: "Funds & Asset Managers",
+    desc: "Access institutional-grade execution, custody, and reporting tools — built to meet the governance and compliance standards your investors and regulators expect.",
+  },
+  {
+    icon: Blocks,
+    title: "Fintech Startups & Web3 Organisations",
+    desc: "Integrate regulated crypto asset services into your product using our API infrastructure and benefit from our MiCAR licence — accelerating your time to market without the regulatory burden of building from scratch.",
   }
 ];
 
@@ -31,10 +31,10 @@ const UseCases = () => {
       <div className="container mx-auto px-6 lg:px-12">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">
-            Who Builds With Us
+            Who We Serve
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Engineered specifically for institutional capital, not retail day traders.
+            Krypto Knight is built for anyone who values security, compliance, and a trustworthy partner in the world of digital assets.
           </p>
         </div>
 
