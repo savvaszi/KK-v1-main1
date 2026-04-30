@@ -45,17 +45,20 @@ function useTheme() {
     return localStorage.getItem("kk_theme") !== "light";
   });
 
+  // Never touch <html> — the theme class is applied to the dashboard container only,
+  // so the public site is never affected.
   useEffect(() => {
-    const root = document.documentElement;
-    if (dark) {
-      root.classList.remove("light");
-    } else {
-      root.classList.add("light");
-    }
-    localStorage.setItem("kk_theme", dark ? "dark" : "light");
-  }, [dark]);
+    // Clean up any stale class that may have been left on <html> by a previous version.
+    document.documentElement.classList.remove("light");
+  }, []);
 
-  return { dark, toggle: () => setDark(d => !d) };
+  const toggle = () => setDark(d => {
+    const next = !d;
+    localStorage.setItem("kk_theme", next ? "dark" : "light");
+    return next;
+  });
+
+  return { dark, toggle, themeClass: dark ? "" : "light" };
 }
 
 function timeAgo(iso: string) {
@@ -848,7 +851,7 @@ export default function Dashboard() {
   const [, navigate] = useLocation();
   const [tab, setTab] = useState("overview");
   const api = useApi();
-  const { dark, toggle: toggleTheme } = useTheme();
+  const { dark, toggle: toggleTheme, themeClass } = useTheme();
   const [portfolioUsd, setPortfolioUsd] = useState<number|null>(null);
 
   const [data, setData] = useState<any>({ security:null, apiKeys:[], sessions:[], audit:[], wallets:[] });
@@ -889,7 +892,7 @@ export default function Dashboard() {
   const score = data.security?.score ?? 0;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className={`min-h-screen bg-background flex flex-col${themeClass ? ` ${themeClass}` : ""}`}>
       {/* Live Ticker */}
       <LiveTicker />
 
