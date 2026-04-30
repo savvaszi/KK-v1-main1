@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useLocation, Link } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
@@ -829,6 +829,7 @@ function NFTsTab() {
 }
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
+// Sidebar nav — only primary trading/asset tabs
 const TABS = [
   { id:"overview",    label:"Overview",    icon:LayoutDashboard, sub:"Account summary" },
   { id:"portfolio",   label:"Portfolio",   icon:TrendingUp,      sub:"Holdings & chart" },
@@ -836,15 +837,78 @@ const TABS = [
   { id:"swap",        label:"Swap",        icon:ArrowRightLeft,  sub:"Instant swaps" },
   { id:"wallets",     label:"Wallets",     icon:Wallet,          sub:"All assets" },
   { id:"watchlist",   label:"Watchlist",   icon:Star,            sub:"Track assets" },
-  { id:"vault",       label:"Vault",       icon:DollarSign,      sub:"Fireblocks custody" },
-  { id:"staking",     label:"Staking",     icon:Layers,          sub:"Earn rewards" },
-  { id:"earn",        label:"Earn",        icon:TrendingUp,      sub:"Yield opportunities" },
-  { id:"nfts",        label:"NFTs",        icon:Image,           sub:"NFT holdings" },
-  { id:"profile",     label:"Profile",     icon:User,            sub:"Personal info" },
-  { id:"security",    label:"Security",    icon:Shield,          sub:"Protection" },
-  { id:"keys",        label:"API Keys",    icon:Key,             sub:"Access keys" },
-  { id:"notifications",label:"Alerts",    icon:Bell,            sub:"Preferences" },
 ];
+
+// Profile dropdown items (accessible from top-right avatar)
+const PROFILE_ITEMS = [
+  { id:"overview",       label:"Overview",  icon:LayoutDashboard },
+  { id:"profile",        label:"Profile",   icon:User            },
+  { id:"security",       label:"Security",  icon:Shield          },
+  { id:"keys",           label:"API Keys",  icon:Key             },
+  { id:"notifications",  label:"Alerts",    icon:Bell            },
+];
+
+function ProfileDropdown({ user, tab, setTab, onLogout }: {
+  user: any; tab: string; setTab: (t: string) => void; onLogout: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onDown(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="flex items-center gap-2 px-2 py-1.5 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/10"
+      >
+        <div className="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center font-bold text-primary text-sm select-none">
+          {(user.firstName?.[0] ?? user.email[0]).toUpperCase()}
+        </div>
+        <div className="text-left hidden sm:block">
+          <p className="text-sm font-semibold text-white leading-tight">{user.firstName ?? user.email.split("@")[0]}</p>
+          <p className="text-xs text-muted-foreground leading-tight">{user.email}</p>
+        </div>
+        <svg className="w-3.5 h-3.5 text-muted-foreground ml-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-2 w-52 glass border border-white/10 rounded-xl shadow-2xl z-50 overflow-hidden">
+          {/* User info header */}
+          <div className="px-4 py-3 border-b border-white/5">
+            <p className="text-sm font-semibold text-white">{user.firstName ? `${user.firstName} ${user.lastName ?? ""}`.trim() : user.email.split("@")[0]}</p>
+            <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+          </div>
+          {/* Nav items */}
+          <div className="py-1">
+            {PROFILE_ITEMS.map(({ id, label, icon: Icon }) => (
+              <button key={id} onClick={() => { setTab(id); setOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors hover:bg-white/5 ${tab === id ? "text-primary" : "text-muted-foreground hover:text-white"}`}>
+                <Icon className="w-4 h-4 shrink-0" />
+                <span className="text-sm font-medium">{label}</span>
+                {tab === id && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-primary" />}
+              </button>
+            ))}
+          </div>
+          {/* Sign out */}
+          <div className="border-t border-white/5 py-1">
+            <button onClick={() => { setOpen(false); onLogout(); }}
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-left text-muted-foreground hover:text-red-400 hover:bg-red-500/5 transition-colors">
+              <LogOut className="w-4 h-4 shrink-0" />
+              <span className="text-sm font-medium">Sign Out</span>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Dashboard() {
   const { user, logout, loading, refreshUser } = useAuth();
@@ -956,36 +1020,41 @@ export default function Dashboard() {
             ))}
           </nav>
 
-          <div className="p-4 border-t border-white/10 shrink-0 space-y-1">
+          <div className="p-4 border-t border-white/10 shrink-0">
             <button onClick={toggleTheme}
               className="flex items-center gap-2 text-sm text-muted-foreground hover:text-white transition-colors w-full px-3 py-2 rounded-lg hover:bg-white/5">
               {dark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               {dark ? "Light Mode" : "Dark Mode"}
             </button>
-            <button onClick={async () => { await logout(); navigate("/"); }}
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-white transition-colors w-full px-3 py-2 rounded-lg hover:bg-white/5">
-              <LogOut className="w-4 h-4" />Sign Out
-            </button>
           </div>
         </aside>
 
-        {/* Main Content */}
-        <main className="flex-1 overflow-auto p-6 lg:p-8">
-          {tab === "overview"      && <OverviewTab user={user} security={data.security} apiKeys={data.apiKeys} audit={data.audit} />}
-          {tab === "portfolio"     && <PortfolioTab useApi={useApi} />}
-          {tab === "exchange"      && <ExchangeTab useApi={useApi} />}
-          {tab === "swap"          && <SwapTab useApi={useApi} />}
-          {tab === "wallets"       && <WalletsTab useApi={useApi} />}
-          {tab === "watchlist"     && <WatchlistTab useApi={useApi} />}
-          {tab === "vault"         && <WalletTab wallets={data.wallets} onRefresh={handleRefresh} />}
-          {tab === "staking"       && <StakingTab />}
-          {tab === "earn"          && <EarnTab />}
-          {tab === "nfts"          && <NFTsTab />}
-          {tab === "profile"       && <ProfileTab user={user} onRefresh={handleRefresh} />}
-          {tab === "security"      && <SecurityTab user={user} security={data.security} sessions={data.sessions} onRefresh={handleRefresh} />}
-          {tab === "keys"          && <ApiKeysTab apiKeys={data.apiKeys} onRefresh={handleRefresh} />}
-          {tab === "notifications" && <NotificationsTab user={user} />}
-        </main>
+        {/* Right panel: topbar + content */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Topbar */}
+          <div className="h-14 shrink-0 glass border-b border-white/10 flex items-center justify-end px-5">
+            <ProfileDropdown
+              user={user}
+              tab={tab}
+              setTab={setTab}
+              onLogout={async () => { await logout(); navigate("/"); }}
+            />
+          </div>
+
+          {/* Main Content */}
+          <main className="flex-1 overflow-auto p-6 lg:p-8">
+            {tab === "overview"      && <OverviewTab user={user} security={data.security} apiKeys={data.apiKeys} audit={data.audit} />}
+            {tab === "portfolio"     && <PortfolioTab useApi={useApi} />}
+            {tab === "exchange"      && <ExchangeTab useApi={useApi} />}
+            {tab === "swap"          && <SwapTab useApi={useApi} />}
+            {tab === "wallets"       && <WalletsTab useApi={useApi} />}
+            {tab === "watchlist"     && <WatchlistTab useApi={useApi} />}
+            {tab === "profile"       && <ProfileTab user={user} onRefresh={handleRefresh} />}
+            {tab === "security"      && <SecurityTab user={user} security={data.security} sessions={data.sessions} onRefresh={handleRefresh} />}
+            {tab === "keys"          && <ApiKeysTab apiKeys={data.apiKeys} onRefresh={handleRefresh} />}
+            {tab === "notifications" && <NotificationsTab user={user} />}
+          </main>
+        </div>
       </div>
     </div>
   );
