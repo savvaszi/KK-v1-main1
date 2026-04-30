@@ -5,33 +5,33 @@ import { Database, Lock, Globe, Zap, Cpu, Code2 } from "lucide-react";
 const services = [
   {
     icon: Database,
-    title: "Institutional Custody",
-    description: "Military-grade cold storage with MPC technology, multi-sig authorization, and full regulatory compliance."
-  },
-  {
-    icon: Zap,
-    title: "High-Frequency Trading",
-    description: "Deep liquidity pools, smart order routing, and zero-slippage execution for institutional block trades."
+    title: "Regulated Exchange Services",
+    description: "Buy, sell, and exchange crypto assets against fiat currencies or other digital assets — backed by competitive pricing, reliable execution, and full MiCAR compliance. Simple for individuals, scalable for institutions."
   },
   {
     icon: Lock,
-    title: "Treasury Management",
-    description: "Automated yield generation, risk hedging, and fiat-to-crypto treasury conversion at scale."
+    title: "Institutional & Personal Custody",
+    description: "Your digital assets and cryptographic keys are safeguarded using Fireblocks' Multi-Party Computation (MPC) technology — the same infrastructure trusted by leading financial institutions globally. Whether you hold a little or a lot, your assets are protected."
   },
   {
     icon: Globe,
-    title: "Global Payments",
-    description: "Cross-border settlement infrastructure utilizing stablecoins to bypass traditional banking latency."
+    title: "Crypto Asset Transfer Services",
+    description: "Send digital assets on your behalf from one distributed ledger address or account to another — to another Krypto Knight client or to an external wallet of your choosing. Fast, secure, and fully compliant with MiCAR Travel Rule obligations."
+  },
+  {
+    icon: Zap,
+    title: "Liquidity Access",
+    description: "We partner with established institutional liquidity providers to ensure you always receive competitive pricing and reliable execution — regardless of the size of your transaction."
   },
   {
     icon: Cpu,
-    title: "AI Risk Engine",
-    description: "Real-time anomaly detection, predictive risk modeling, and automated AML/KYC screening."
+    title: "Fiat On & Off Ramp",
+    description: "Move seamlessly between fiat and digital assets via our banking and EMI partnerships — supporting SEPA transfers and multi-currency settlement for both personal and corporate clients."
   },
   {
     icon: Code2,
-    title: "Developer APIs",
-    description: "REST & WebSocket APIs with 99.999% uptime SLAs for seamless integration into existing fintech stacks."
+    title: "Developer-Ready Integration",
+    description: "For fintech companies and Web3 organisations looking to embed regulated crypto services into their own products, our API-first infrastructure makes integration straightforward and compliant from day one."
   }
 ];
 
@@ -41,11 +41,11 @@ const CoreServices = () => {
       <div className="container mx-auto px-6 lg:px-12">
         <div className="mb-16">
           <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4">
-            Comprehensive <br />
-            <span className="text-gradient-primary">Infrastructure</span>
+            Everything You Need. <br />
+            <span className="text-gradient-primary">One Regulated Platform.</span>
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl">
-            A unified suite of products eliminating the fragmentation of institutional crypto operations. One platform, complete control.
+            Whether you are managing personal savings or institutional capital, Krypto Knight brings together all the tools you need under one compliant and supervised roof.
           </p>
         </div>
 
