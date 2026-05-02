@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 const TrustStrip = () => {
   const partners = [
     { name: "MiCA", subtitle: "Ready" },
-    { name: "CySEC", subtitle: "Registered" },
+    { name: "MiCA", subtitle: "License in Progress" },
     { name: "KYC/AML", subtitle: "Integrated" },
     { name: "Fireblocks", subtitle: "Powered" },
   ];
