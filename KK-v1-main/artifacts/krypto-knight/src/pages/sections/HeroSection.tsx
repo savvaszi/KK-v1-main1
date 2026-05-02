@@ -30,8 +30,8 @@ const HeroSection = () => {
             </div>
             
             <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.1]">
-              Your Gateway to Digital Assets —<br />
-              Regulated, Secure, and <br />
+              Your Gateway to Digital Assets<br />
+              Secure, and <br />
               <span className="text-gradient-primary">Built for Everyone</span>
             </h1>
 
@@ -87,19 +87,6 @@ const HeroSection = () => {
                 className="absolute inset-0 w-full h-full object-contain drop-shadow-[0_0_30px_rgba(0,255,156,0.3)] z-10"
               />
               
-              {/* Floating metrics cards */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1.2, duration: 0.6 }}
-                className="absolute -right-8 bottom-1/4 glass-card p-4 rounded-lg z-20 hidden md:block"
-              >
-                <div className="text-xs text-muted-foreground mb-1 font-mono">Uptime</div>
-                <div className="text-lg font-bold text-white">99.999%</div>
-                <div className="text-xs text-primary mt-1 flex items-center gap-1">
-                  SLA Guaranteed
-                </div>
-              </motion.div>
             </div>
           </motion.div>
 
