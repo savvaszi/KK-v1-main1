@@ -26,7 +26,7 @@ const HeroSection = () => {
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/5 text-primary text-sm font-medium mb-6">
               <ShieldCheck className="w-4 h-4" />
-              <span>CySEC Regulated Infrastructure</span>
+              <span>CySEC Registered CASP</span>
             </div>
             
             <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 leading-[1.1]">
@@ -36,7 +36,7 @@ const HeroSection = () => {
             </h1>
 
             <p className="text-lg lg:text-xl text-muted-foreground mb-10 max-w-xl font-light leading-relaxed">
-              Whether you are an individual taking your first steps into crypto or an institution managing digital assets at scale, Krypto Knight gives you access to a fully regulated, secure, and straightforward platform — licensed by CySEC and built for the MiCAR era.
+              Whether you are an individual taking your first steps into crypto or an institution managing digital assets at scale, Krypto Knight gives you access to a fully regulated, secure, and straightforward platform — registered with CySEC and built for the MiCAR era.
             </p>
 
             <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-4">
@@ -57,7 +57,7 @@ const HeroSection = () => {
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_5px_rgba(0,255,156,1)]"></div>
-                <span>CySEC Licensed</span>
+                <span>MiCA License in Progress</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_5px_rgba(0,255,156,1)]"></div>
@@ -88,20 +88,7 @@ const HeroSection = () => {
               />
               
               {/* Floating metrics cards */}
-              <motion.div 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 1, duration: 0.6 }}
-                className="absolute -left-12 top-1/4 glass-card p-4 rounded-lg z-20 hidden md:block"
-              >
-                <div className="text-xs text-muted-foreground mb-1 font-mono">24h Vol</div>
-                <div className="text-lg font-bold text-white">$1.24B</div>
-                <div className="text-xs text-primary mt-1 flex items-center gap-1">
-                  <ArrowRight className="w-3 h-3 -rotate-45" /> +12.5%
-                </div>
-              </motion.div>
-
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 1.2, duration: 0.6 }}

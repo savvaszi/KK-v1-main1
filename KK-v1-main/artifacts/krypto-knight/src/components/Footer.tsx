@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "wouter";
 
+const scrollTop = () => window.scrollTo({ top: 0, behavior: "instant" });
+
 const Footer = () => {
   return (
     <footer className="bg-background border-t border-white/5 pt-20 pb-10">
@@ -8,7 +10,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-16">
           {/* Brand */}
           <div className="col-span-1 md:col-span-1">
-            <Link href="/" className="flex items-center gap-3 mb-6">
+            <Link href="/" onClick={scrollTop} className="flex items-center gap-3 mb-6">
               <img
                 src="/knight-head.png"
                 alt="Krypto Knight"
@@ -30,27 +32,27 @@ const Footer = () => {
             <h4 className="font-semibold text-white mb-6">Company</h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/about" onClick={scrollTop} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/services" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/services" onClick={scrollTop} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Services
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/contact" onClick={scrollTop} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Contact
                 </Link>
               </li>
               <li>
-                <Link href="/open-account" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/open-account" onClick={scrollTop} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Open Account
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/login" onClick={scrollTop} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Client Login
                 </Link>
               </li>
@@ -62,27 +64,27 @@ const Footer = () => {
             <h4 className="font-semibold text-white mb-6">Legal</h4>
             <ul className="space-y-3">
               <li>
-                <Link href="/terms-and-conditions" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/terms-and-conditions" onClick={scrollTop} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link href="/privacy-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/privacy-policy" onClick={scrollTop} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/aml-policy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/aml-policy" onClick={scrollTop} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   AML Policy
                 </Link>
               </li>
               <li>
-                <Link href="/complaints-procedure" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/complaints-procedure" onClick={scrollTop} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Complaints Procedure
                 </Link>
               </li>
               <li>
-                <Link href="/cookies" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/cookies" onClick={scrollTop} className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Cookie Policy
                 </Link>
               </li>
@@ -101,14 +103,10 @@ const Footer = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">
+        <div className="border-t border-white/5 pt-8 flex items-center justify-center">
+          <p className="text-xs text-muted-foreground text-center">
             © {new Date().getFullYear()} Krypto Knight Ltd. CySEC — CASP Registration No. 015/24. All rights reserved.
           </p>
-          <div className="flex gap-6">
-            <a href="#" className="text-muted-foreground hover:text-white transition-colors text-sm">Twitter</a>
-            <a href="#" className="text-muted-foreground hover:text-white transition-colors text-sm">LinkedIn</a>
-          </div>
         </div>
       </div>
     </footer>

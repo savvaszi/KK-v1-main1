@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 const TrustStrip = () => {
   const partners = [
     { name: "MiCA", subtitle: "Ready" },
-    { name: "CySEC", subtitle: "Licensed" },
+    { name: "CySEC", subtitle: "Registered" },
     { name: "KYC/AML", subtitle: "Integrated" },
     { name: "Fireblocks", subtitle: "Powered" },
   ];
@@ -13,7 +13,7 @@ const TrustStrip = () => {
     <section className="py-10 border-y border-white/5 bg-black/40 backdrop-blur-md">
       <div className="container mx-auto px-6 lg:px-12">
         <p className="text-center text-sm font-medium text-muted-foreground mb-8 uppercase tracking-widest">
-          Trusted by global financial institutions
+          Built for Transparency
         </p>
         
         <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-8 lg:gap-x-24">
